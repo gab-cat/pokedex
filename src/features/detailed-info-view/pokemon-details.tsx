@@ -3,7 +3,7 @@
 import { BarChart3, Swords, Zap } from "lucide-react";
 import { StatsTab, AbilitiesTab, MovesTab, EvolutionTab } from "./tabs";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PokemonDetails as PokemonDetailsType } from "@/types/pokemon";
+import { EvolutionChain, PokemonDetails as PokemonDetailsType } from "@/types/pokemon";
 
 type PokemonDetailsProps = {
   pokemon: {
@@ -109,8 +109,8 @@ export function PokemonDetails({ pokemon }: PokemonDetailsProps) {
       {/* Evolution Chain */}
       {pokemon.evolutionChain && pokemon.evolutionChain.length > 0 && (
         <EvolutionTab 
-          evolutionChain={pokemon.evolutionChain} 
-          currentPokemonName={pokemon.name} 
+          evolutionChain={pokemon.evolutionChain as unknown as EvolutionChain[]} 
+          currentPokemonName={pokemon.name || ""} 
         />
       )}
     </div>

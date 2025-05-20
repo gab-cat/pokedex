@@ -11,5 +11,5 @@ export default function Loading() {
         <p className="text-gray-500 animate-pulse mt-2">Catching Pokémon data</p>
       </div>
     </div>
-  )
+  );
 }

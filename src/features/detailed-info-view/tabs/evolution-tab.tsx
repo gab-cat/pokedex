@@ -4,7 +4,12 @@ import { Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
-import { EvolutionTabProps } from "@/types/pokemon";
+import { EvolutionChain } from "@/types";
+
+type EvolutionTabProps = {
+  evolutionChain: EvolutionChain[];
+  currentPokemonName: string;
+};
 
 export function EvolutionTab({ evolutionChain, currentPokemonName }: EvolutionTabProps) {
   return (

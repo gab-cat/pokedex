@@ -12,6 +12,8 @@ type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
+export const revalidate = 300;
+
 export default async function HomePage({ searchParams }: Props) {
   // Get type from search params if it exists
   const typeParam = searchParams.type;

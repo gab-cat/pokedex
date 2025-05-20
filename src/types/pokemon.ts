@@ -69,3 +69,17 @@ export type PokemonBasicInfo = {
   name: string;
   url: string;
 };
+
+export type EvolutionChain = {
+  name: string;
+  url: string;
+  species: {
+    name: string;
+    url: string;
+  };
+  evolves_to: EvolutionChain[];
+  is_baby: boolean;
+  min_level?: number;
+  trigger?: string;
+  item?: string;
+};

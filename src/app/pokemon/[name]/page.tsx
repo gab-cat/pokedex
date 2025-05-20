@@ -8,6 +8,16 @@ type PokemonPageProps = {
   }>;
 };
 
+export async function generateStaticParams() {
+  // Fetch the first 151 Pokemon (original generation)
+  const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151');
+  const data = await response.json();
+  
+  return data.results.map((pokemon: { name: string }) => ({
+    name: pokemon.name,
+  }));
+}
+
 export async function generateMetadata({ params }: PokemonPageProps): Promise<Metadata> {
   const formattedName = (await params).name.charAt(0).toUpperCase() + (await params).name.slice(1);
   
