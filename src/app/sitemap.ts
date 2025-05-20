@@ -15,7 +15,7 @@ async function fetchAllPokemon() {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://pokedex-your-domain.com';
+  const baseUrl = 'https://pokedex.gab-cat.me';
   
   // Get all Pokemon for dynamic routes
   const allPokemon = await fetchAllPokemon();
