@@ -19,12 +19,61 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: PokemonPageProps): Promise<Metadata> {
-  const formattedName = (await params).name.charAt(0).toUpperCase() + (await params).name.slice(1);
+  const pokemonName = (await params).name;
+  const formattedName = pokemonName.charAt(0).toUpperCase() + pokemonName.slice(1);
   
-  return {
-    title: `${formattedName} | Pokédex`,
-    description: `Learn all about ${formattedName}, including its type, abilities, stats, and more.`,
-  };
+  // Fetch basic Pokemon data to get the image
+  try {
+    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
+    
+    if (!response.ok) {
+      return {
+        title: `${formattedName} | Pokédex`,
+        description: `Learn all about ${formattedName}, including its type, abilities, stats, and more.`
+      };
+    }
+    
+    const pokemonData = await response.json();
+    const pokemonImage = pokemonData.sprites.other["official-artwork"].front_default || 
+                         pokemonData.sprites.other.home.front_default ||
+                         pokemonData.sprites.front_default;
+    
+    // Get types for keywords
+    const types = pokemonData.types.map((type: { type: { name: string } }) => 
+      type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)
+    ).join(", ");
+    
+    return {
+      title: `${formattedName} | Pokédex`,
+      description: `Learn all about ${formattedName}, a ${types} type Pokémon, including its abilities, stats, and evolution chain.`,
+      keywords: [`${formattedName}`, 'Pokémon', 'Pokédex', `${types} type`, 'Pokémon stats', 'Pokémon evolution'],
+      openGraph: {
+        title: `${formattedName} | Pokédex`,
+        description: `Learn all about ${formattedName}, a ${types} type Pokémon, including its abilities, stats, and evolution chain.`,
+        type: 'article',
+        images: [
+          {
+            url: pokemonImage,
+            width: 600,
+            height: 600,
+            alt: `${formattedName} Pokémon`
+          }
+        ]
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: `${formattedName} | Pokédex`,
+        description: `Learn all about ${formattedName}, a ${types} type Pokémon, including its abilities, stats, and evolution chain.`,
+        images: [pokemonImage]
+      }
+    };
+  } catch {
+    // Fallback metadata if fetch fails
+    return {
+      title: `${formattedName} | Pokédex`,
+      description: `Learn all about ${formattedName}, including its type, abilities, stats, and more.`
+    };
+  }
 }
 
 async function getPokemonData(name: string) {

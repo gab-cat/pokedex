@@ -4,8 +4,37 @@ import { useApiClient } from "@/lib/api";
 import { PokemonListResponse } from "@/types";
 
 export const metadata: Metadata = {
-  title: "Pokédex",
+  title: "Pokédex | Your Ultimate Pokémon Encyclopedia",
   description: "A comprehensive Pokédex web application to explore and learn about different Pokémon species, their abilities, types, and stats.",
+  keywords: ['Pokémon', 'Pokédex', 'Pokemon database', 'Pokemon types', 'Pokemon stats', 'Pokemon encyclopedia'],
+  openGraph: {
+    title: "Pokédex | Your Ultimate Pokémon Encyclopedia",
+    description: "Explore the world of Pokémon with our comprehensive Pokédex. Search, filter, and discover details about your favorite Pokémon.",
+    type: "website",
+    url: "https://pokedex-your-domain.com",
+    images: [
+      {
+        url: "/og-home.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Pokédex - Your Ultimate Pokémon Encyclopedia"
+      }
+    ],
+    siteName: "Pokédex"
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Pokédex | Your Ultimate Pokémon Encyclopedia",
+    description: "Explore the world of Pokémon with our comprehensive Pokédex. Search, filter, and discover details about your favorite Pokémon.",
+    images: ["/og-home.jpg"]
+  },
+  robots: {
+    index: true,
+    follow: true
+  },
+  alternates: {
+    canonical: "https://pokedex-your-domain.com"
+  }
 };
 
 type Props = {

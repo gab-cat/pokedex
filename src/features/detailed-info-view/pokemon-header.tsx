@@ -93,7 +93,7 @@ export function PokemonHeader({ pokemonId, name = "" }: PokemonHeaderProps) {
         <Link prefetch href="/">
           <Button 
             variant="outline" 
-            className="gap-2 bg-gradient-to-r from-red-500/80 to-red-600/80 text-white border-0 hover:from-red-600/90 hover:to-red-700/90 hover:text-white transition-all shadow-md hover:shadow-lg">
+            className="gap-2 transition-all border">
             <ChevronLeft className="h-4 w-4" />
             Back to Pokédex
           </Button>
