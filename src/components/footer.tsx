@@ -72,12 +72,12 @@ function FooterComponent() {
                 Your comprehensive guide to the world of Pokémon. Explore, learn, and discover all your favorite Pokémon
                 in one place.
               </p>
-              <div className="flex space-x-3 items-center border border-white/20 rounded-full p-2 hover:border-white/70 hover:bg-white/20 transition-colors cursor-pointer">
+              <Link href="https://github.com/gab-cat/pokedex" target="_blank" className="flex space-x-3 items-center border border-white/20 rounded-full p-2 hover:border-white/70 hover:bg-white/20 transition-colors cursor-pointer">
                 <Button size="icon" variant="ghost" className="rounded-full bg-white/10 hover:bg-white/20 text-white">
                   <Github className="h-4 w-4" />
                 </Button>
                 <span className="text-sm text-white/80">Check out the code on GitHub</span>
-              </div>
+              </Link>
             </div>
 
             {/* Quick links */}
