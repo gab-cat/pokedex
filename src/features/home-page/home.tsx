@@ -25,7 +25,7 @@ export function Home({ initialPokemon = [], initialSelectedType }: HomeProps) {
   
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:p-8">
-      <div className="w-full max-w-7xl">
+      <div className="w-full max-w-7xl min-h-screen">
         <HeroSection />
         <PokedexHeader />
         <TypeFilters />
