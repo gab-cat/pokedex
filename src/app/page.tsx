@@ -11,10 +11,10 @@ export const metadata: Metadata = {
     title: "Pokédex | Your Ultimate Pokémon Encyclopedia",
     description: "Explore the world of Pokémon with our comprehensive Pokédex. Search, filter, and discover details about your favorite Pokémon.",
     type: "website",
-    url: "https://pokedex-your-domain.com",
+    url: "https://pokedex.gab-cat.me",
     images: [
       {
-        url: "/og-home.jpg",
+        url: "/hero.avif",
         width: 1200,
         height: 630,
         alt: "Pokédex - Your Ultimate Pokémon Encyclopedia"
@@ -26,14 +26,14 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Pokédex | Your Ultimate Pokémon Encyclopedia",
     description: "Explore the world of Pokémon with our comprehensive Pokédex. Search, filter, and discover details about your favorite Pokémon.",
-    images: ["/og-home.jpg"]
+    images: ["/hero.avif"]
   },
   robots: {
     index: true,
     follow: true
   },
   alternates: {
-    canonical: "https://pokedex-your-domain.com"
+    canonical: "https://pokedex.gab-cat.me"
   }
 };
 
