@@ -40,6 +40,7 @@ module.exports = {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
         },
+        'cream-100': '#FFFDD0',
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -74,6 +75,14 @@ module.exports = {
           '0%': { transform: 'translateX(0)' },
           '100%': { transform: 'translateX(-50%)' },
         },
+        carouselReverse: {
+          '0%': { transform: 'translateX(-50%)' },
+          '100%': { transform: 'translateX(0)' },
+        },
+        twinkle: {
+          '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+          '50%': { opacity: '0.5', transform: 'scale(0.7)' },
+        },
       },
       animation: {
         float: 'float 3s ease-in-out infinite',
@@ -82,8 +91,24 @@ module.exports = {
         bounceIn: 'bounceIn 0.6s ease-out forwards',
         wiggle: 'wiggle 0.5s ease-in-out',
         carousel: 'carousel 40s linear infinite',
+        'carousel-reverse': 'carouselReverse 50s linear infinite',
+        twinkle: 'twinkle 2s ease-in-out infinite',
       },
+      utilities: {
+        '.clip-path-tail': {
+          clipPath: 'polygon(0% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%)'
+        }
+      }
     },
   },
-  plugins: [],
+  plugins: [
+    function({ addUtilities }) {
+      const newUtilities = {
+        '.clip-path-tail': {
+          clipPath: 'polygon(0% 0%, 100% 0%, 100% 70%, 50% 100%, 0% 70%)'
+        }
+      };
+      addUtilities(newUtilities);
+    }
+  ],
 };
