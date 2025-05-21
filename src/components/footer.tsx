@@ -13,37 +13,43 @@ function FooterComponent() {
         <div className="animate-carousel whitespace-nowrap opacity-15 flex">
           {/* First set of Pokeballs */}
           <div className="inline-flex min-w-full">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <div 
-                suppressHydrationWarning
-                key={`first-${i}`} 
-                className="inline-block mx-3 aspect-square rounded-full border-4 border-black"
-                style={{ 
-                  width: `${Math.max(20, Math.random() * 40)}px`,
-                  height: `${Math.max(20, Math.random() * 40)}px`,
-                  marginTop: `${Math.random() * 30}px`
-                }}
-              >
-                <div className="w-full h-1/2 bg-red-500"></div>
-              </div>
-            ))}
+            {Array.from({ length: 20 }).map((_, i) => {
+              const size = Math.max(20, Math.random() * 40);
+              return (
+                <div 
+                  suppressHydrationWarning
+                  key={`first-${i}`} 
+                  className="inline-block mx-3 aspect-square rounded-full border-4 border-black"
+                  style={{ 
+                    width: `${size}px`,
+                    height: `${size}px`,
+                    marginTop: `${Math.random() * 30}px`
+                  }}
+                >
+                  <div className="w-full h-1/2 bg-red-500 rounded-t-full"></div>
+                </div>
+              );
+            })}
           </div>
           {/* Duplicate set to create seamless loop */}
           <div className="inline-flex min-w-full">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <div 
-                suppressHydrationWarning
-                key={`second-${i}`} 
-                className="inline-block mx-3 aspect-square rounded-full border-4 border-black"
-                style={{ 
-                  width: `${Math.max(20, Math.random() * 40)}px`,
-                  height: `${Math.max(20, Math.random() * 40)}px`,
-                  marginTop: `${Math.random() * 30}px`
-                }}
-              >
-                <div className="w-full h-1/2 bg-red-500"></div>
-              </div>
-            ))}
+            {Array.from({ length: 20 }).map((_, i) => {
+              const size = Math.max(20, Math.random() * 40);
+              return (
+                <div 
+                  suppressHydrationWarning
+                  key={`second-${i}`} 
+                  className="inline-block mx-3 aspect-square rounded-full border-4 border-black"
+                  style={{ 
+                    width: `${size}px`,
+                    height: `${size}px`,
+                    marginTop: `${Math.random() * 30}px`
+                  }}
+                >
+                  <div className="w-full h-1/2 bg-red-500 rounded-t-full"></div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

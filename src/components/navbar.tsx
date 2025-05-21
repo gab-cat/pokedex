@@ -91,11 +91,11 @@ function NavbarComponent() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <div className="relative w-10 h-10 bg-red-500 rounded-full overflow-hidden flex items-center justify-center border-2 border-white animate-pulse">
-              <div className="absolute w-10 h-5 bg-white top-0" />
-              <div className="absolute w-3 h-3 bg-white rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border-2 border-gray-800"></div>
+            <div className="relative w-10 h-10 bg-white rounded-full overflow-hidden flex items-center justify-center border-2 border-white animate-pulse">
+              <div className="absolute w-10 h-5 bg-red-500 top-0" />
+              <div className="absolute w-3 h-3 bg-white  rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border-2 border-gray-800"></div>
             </div>
-            <span className="font-bold text-xl bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+            <span className="font-bold text-3xl bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
               Pokédex
             </span>
           </Link>
@@ -165,7 +165,7 @@ function NavbarComponent() {
 
         {/* Mobile Menu */}
         <div
-          className={`md:hidden bg-white overflow-hidden transition-all duration-300 ease-in-out ${
+          className={`md:hidden text-white overflow-hidden transition-all duration-300 ease-in-out ${
             isMenuOpen ? "max-h-[80vh] mt-4 overflow-y-auto" : "max-h-0"
           }`}
         >
@@ -176,9 +176,9 @@ function NavbarComponent() {
                 placeholder="Search Pokémon..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full h-10 rounded-full pl-9 pr-4 bg-gray-100 border-none"
+                className="w-full h-10 rounded-full pl-9 pr-4 bg-gray-200 border-none placeholder:text-gray-200"
               />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-200" />
             </form>
 
             <Link href="/" onClick={() => setIsMenuOpen(false)}>
@@ -189,10 +189,10 @@ function NavbarComponent() {
             </Link>
 
             {/* Mobile type menu */}
-            <div className="p-2 rounded-lg bg-gray-50">
+            <div className="p-2 rounded-lg">
               <div className="flex items-center mb-2">
-                <Sparkles className="h-4 w-4 mr-2 text-gray-500" />
-                <h3 className="text-sm font-medium text-gray-700">Pokémon Types</h3>
+                <Sparkles className="h-4 w-4 mr-2 " />
+                <h3 className="text-sm font-medium">Pokémon Types</h3>
               </div>
               <div className="grid grid-cols-2 gap-1">
                 {typeItems.map(({ type, label, icon }) => (
