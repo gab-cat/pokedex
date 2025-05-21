@@ -38,14 +38,15 @@ export const metadata: Metadata = {
 };
 
 type Props = {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export const revalidate = 300;
 
 export default async function HomePage({ searchParams }: Props) {
+  const params = await searchParams;
   // Get type from search params if it exists
-  const typeParam = searchParams.type;
+  const typeParam = params.type;
   const selectedType = typeof typeParam === 'string' ? typeParam : undefined;
   
 

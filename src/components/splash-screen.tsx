@@ -6,28 +6,48 @@ import { useState, useEffect, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export const SplashScreen = memo(({ children }: { children: React.ReactNode }) => {
-  const [showSplash, setShowSplash] = useState(true);
+  const [showSplash, setShowSplash] = useState(false);
   const [startExit, setStartExit] = useState(false);
 
   useEffect(() => {
-    // Start exit animation after a shorter duration
-    const timer = setTimeout(() => {
-      setStartExit(true);
-    }, 3000); // Reduced total animation time before exit
+    // Check if splash has already been shown in this session
+    const splashShown = localStorage.getItem('splashScreenShown');
+    
+    // Only show splash if it hasn't been shown yet
+    if (!splashShown) {
+      setShowSplash(true);
+      
+      // Start exit animation after a shorter duration
+      const timer = setTimeout(() => {
+        setStartExit(true);
+      }, 3000); // Reduced total animation time before exit
 
-    // Hide splash screen after animation completes
-    const exitTimer = setTimeout(() => {
-      setShowSplash(false);
-    }, 3500); // Total time including exit animation
+      // Hide splash screen after animation completes
+      const exitTimer = setTimeout(() => {
+        setShowSplash(false);
+        // Save to localStorage that splash has been shown
+        localStorage.setItem('splashScreenShown', 'true');
+      }, 3500); // Total time including exit animation
 
-    return () => {
-      clearTimeout(timer);
-      clearTimeout(exitTimer);
-    };
-
-  
+      return () => {
+        clearTimeout(timer);
+        clearTimeout(exitTimer);
+      };
+    }
   }, []);
 
+  // If page is refreshed, clear localStorage on beforeunload
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      localStorage.removeItem('splashScreenShown');
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   return (
     <>

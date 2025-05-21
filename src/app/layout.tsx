@@ -60,7 +60,7 @@ export default function RootLayout({
         <QueryProvider>
           <SplashScreen>
             <Navbar />
-            <div className="pt-20">{children}</div>
+            <div className="pt-20 min-h-screen">{children}</div>
             <Footer />
             <Toaster />
           </SplashScreen>

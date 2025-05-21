@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Loader2, ChevronDown, ArrowUp, ArrowDown } from "lucide-react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { PokemonCard } from "./pokemon-card";
@@ -24,131 +24,127 @@ type PokemonGridProps = {
 }
 
 export function PokemonGrid({ initialPokemon = [] }: PokemonGridProps) {
-  const [offset, setOffset] = useState(initialPokemon.length || 0);
-  const [pokemonList, setPokemonList] = useState<Pokemon[]>(initialPokemon);
-  const [loadingAnimation, setLoadingAnimation] = useState(false);
+  // State
+  const [offset, setOffset] = useState(0);
   const [typeOffset, setTypeOffset] = useState(0);
-  const [typeFilteredList, setTypeFilteredList] = useState<Pokemon[]>([]);
+  const [loadingAnimation, setLoadingAnimation] = useState(false);
   const [sort, setSort] = useState<SortOption>({ field: 'id', order: 'asc' });
+  const [parent] = useAutoAnimate();
+  
+  // Track accumulated results
+  const [accumulatedPokemon, setAccumulatedPokemon] = useState<Pokemon[]>(initialPokemon);
+  const [accumulatedTypePokemon, setAccumulatedTypePokemon] = useState<Pokemon[]>([]);
   
   const limit = 10;
-  const { data, isLoading, isFetching } = usePokemonList(limit, offset);
-  
   const { selectedTypes } = useTypeFilterStore();
+  
+  // Data fetching
+  const { data, isLoading, isFetching } = usePokemonList(limit, offset);
   const { 
     data: typeFilteredData, 
     isLoading: isTypeFilterLoading,
     isFetching: isTypeFilterFetching
   } = usePokemonByType(selectedTypes, limit, typeOffset, sort);
-
-  const [parent] = useAutoAnimate();
   
-  // Reset offsets when changing type filter
+  // Reset offsets and accumulated results when changing type filter
   useEffect(() => {
     if (selectedTypes.length > 0) {
       setTypeOffset(0);
-      setTypeFilteredList([]);
-    } else {
-      setOffset(initialPokemon.length || 0);
+      setAccumulatedTypePokemon([]);
     }
-  }, [selectedTypes, initialPokemon.length]);
+  }, [selectedTypes]);
   
-  // Update typeFilteredList when new type data arrives
+  // Update accumulated Pokemon when new data arrives
+  useEffect(() => {
+    if (data?.results && selectedTypes.length === 0) {
+      if (offset === 0) {
+        // For first load, use initialPokemon if available, otherwise use fetched results
+        setAccumulatedPokemon(initialPokemon.length > 0 ? initialPokemon : data.results);
+      } else {
+        // For subsequent loads, append new results
+        setAccumulatedPokemon(prev => [...prev, ...data.results]);
+      }
+    }
+  }, [data?.results, initialPokemon, offset, selectedTypes.length]);
+  
+  // Update accumulated type Pokemon when new type data arrives
   useEffect(() => {
     if (typeFilteredData?.results && selectedTypes.length > 0) {
       if (typeOffset === 0) {
-        setTypeFilteredList(typeFilteredData.results);
+        setAccumulatedTypePokemon(typeFilteredData.results);
       } else {
-        setTypeFilteredList(prev => [...prev, ...typeFilteredData.results]);
+        setAccumulatedTypePokemon(prev => [...prev, ...typeFilteredData.results]);
       }
     }
-  }, [typeFilteredData, selectedTypes, typeOffset]);
-
-  // Apply sort to main pokemon list
-  useEffect(() => {
-    if (data?.results && selectedTypes.length === 0) {
-      // Create a copy of the current data to sort instead of using pokemonList
-      const currentPokemon = [...data.results];
-      const sortedResults = currentPokemon.sort((a, b) => {
-        if (sort.field === 'name') {
-          return sort.order === 'asc'
-            ? a.name.localeCompare(b.name)
-            : b.name.localeCompare(a.name);
-        } else {
-          const idA = getPokemonIdFromUrl(a.url);
-          const idB = getPokemonIdFromUrl(b.url);
-          return sort.order === 'asc' ? idA - idB : idB - idA;
-        }
-      });
-      
-      setPokemonList(sortedResults);
-    }
-  }, [sort, data?.results, selectedTypes]); // Remove pokemonList from dependencies
+  }, [typeFilteredData?.results, typeOffset, selectedTypes.length]);
   
-  const hasMore = selectedTypes.length > 0
-    ? typeFilteredData?.hasMore 
-    : data?.next !== null;
+  // Sort function
+  const sortPokemon = useCallback((pokemonToSort: Pokemon[]) => {
+    return [...pokemonToSort].sort((a, b) => {
+      if (sort.field === 'name') {
+        return sort.order === 'asc'
+          ? a.name.localeCompare(b.name)
+          : b.name.localeCompare(a.name);
+      } else {
+        const idA = getPokemonIdFromUrl(a.url);
+        const idB = getPokemonIdFromUrl(b.url);
+        return sort.order === 'asc' ? idA - idB : idB - idA;
+      }
+    });
+  }, [sort]);
   
+  // Memoized sorted Pokemon lists
+  const sortedPokemonList = useMemo(() => {
+    return sortPokemon(accumulatedPokemon);
+  }, [accumulatedPokemon, sortPokemon]);
+  
+  const sortedTypeFilteredList = useMemo(() => {
+    return sortPokemon(accumulatedTypePokemon);
+  }, [accumulatedTypePokemon, sortPokemon]);
+  
+  // Determine which data to display - filtered or regular
+  const displayedPokemon = useMemo(() => {
+    return selectedTypes.length > 0 ? sortedTypeFilteredList : sortedPokemonList;
+  }, [selectedTypes.length, sortedTypeFilteredList, sortedPokemonList]);
+  
+  // Calculate whether there are more items
+  const hasMore = useMemo(() => {
+    return selectedTypes.length > 0
+      ? typeFilteredData?.hasMore 
+      : data?.next !== null;
+  }, [selectedTypes.length, typeFilteredData?.hasMore, data?.next]);
+  
+  // Calculate total count for display
+  const totalCount = useMemo(() => {
+    return selectedTypes.length > 0 ? typeFilteredData?.count || 0 : null;
+  }, [selectedTypes.length, typeFilteredData?.count]);
+  
+  // Loading state
   const loading = isLoading || isFetching || isTypeFilterLoading || isTypeFilterFetching;
   
-  const loadMore = async () => {
+  // Load more handler
+  const loadMore = useCallback(() => {
     if (loading || !hasMore) return;
     setLoadingAnimation(true);
     
     if (selectedTypes.length > 0) {
       // Load more filtered Pokemon
-      setTypeOffset(typeOffset + limit);
+      setTypeOffset(prev => prev + limit);
     } else {
       // Load more regular Pokemon
-      setOffset(offset + limit);
-      
-      if (data?.results) {
-        setTimeout(() => {
-          // Apply sorting to new pokemon without creating dependency on pokemonList
-          const newPokemon = [...data.results];
-          
-          // Sort the new pokemon according to the current sort settings
-          const sortedNewPokemon = newPokemon.sort((a, b) => {
-            if (sort.field === 'name') {
-              return sort.order === 'asc'
-                ? a.name.localeCompare(b.name)
-                : b.name.localeCompare(a.name);
-            } else {
-              const idA = getPokemonIdFromUrl(a.url);
-              const idB = getPokemonIdFromUrl(b.url);
-              return sort.order === 'asc' ? idA - idB : idB - idA;
-            }
-          });
-          
-          // Append the sorted new pokemon to the existing list
-          setPokemonList(currentList => [...currentList, ...sortedNewPokemon]);
-          
-          setTimeout(() => {
-            setLoadingAnimation(false);
-          }, 300);
-        }, 800);
-      }
+      setOffset(prev => prev + limit);
     }
     
     // Add a small delay to show the animation
     setTimeout(() => {
       setLoadingAnimation(false);
     }, 1000);
-  };
+  }, [loading, hasMore, selectedTypes.length, limit]);
 
-  // Determine which data to display - filtered or regular
-  const displayedPokemon = selectedTypes.length > 0 
-    ? typeFilteredList 
-    : (pokemonList.length > 0 ? pokemonList : (data?.results || []));
-
-  // Calculate total count for display
-  const totalCount = selectedTypes.length > 0
-    ? typeFilteredData?.count || 0
-    : null;
-
-  const getSortLabel = () => {
+  // Sort label
+  const getSortLabel = useCallback(() => {
     return `${sort.field === 'name' ? 'Name' : 'ID'} ${sort.order === 'asc' ? '↑' : '↓'}`;
-  };
+  }, [sort.field, sort.order]);
 
   return (
     <div className="w-full">

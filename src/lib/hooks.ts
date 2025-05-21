@@ -49,17 +49,25 @@ export function useSearchPokemon(searchTerm: string, filters?: { type: 'name' | 
         if (!searchTerm || searchTerm.length < 2) return true;
         
         // Get the ID from the URL
-        const id = String(getPokemonIdFromUrl(pokemon.url));
+        const numericId = getPokemonIdFromUrl(pokemon.url);
+        
+        // Format ID with leading zeros for proper searching (001, 025, etc.)
+        const id = numericId < 100 ? numericId.toString().padStart(3, '0') : numericId.toString();
         
         if (filters?.type === 'id') {
           // Filter by ID only
-          return id.includes(searchTerm);
+          const formattedSearchTerm = searchTerm.padStart(3, '0');
+          return id.includes(formattedSearchTerm);
         } else if (filters?.type === 'name') {
           // Filter by name only
           return pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
         } else {
           // Filter by both ID and name (default)
-          return pokemon.name.toLowerCase().includes(searchTerm.toLowerCase()) || id.includes(searchTerm);
+          const formattedSearchTerm = isNumeric(searchTerm) && parseInt(searchTerm) < 100 
+            ? searchTerm.padStart(3, '0') 
+            : searchTerm;
+            
+          return pokemon.name.toLowerCase().includes(searchTerm.toLowerCase()) || id.includes(formattedSearchTerm);
         }
       });
       
@@ -87,6 +95,11 @@ export function useSearchPokemon(searchTerm: string, filters?: { type: 'name' | 
     },
     enabled: !!searchTerm && searchTerm.length > 1,
   });
+}
+
+// Helper to check if a string contains only numbers
+function isNumeric(str: string) {
+  return /^\d+$/.test(str);
 }
 
 // Utility function to extract Pokemon ID from URL
