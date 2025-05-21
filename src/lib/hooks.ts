@@ -36,34 +36,119 @@ export function usePokemonSpecies(id: number) {
   });
 }
 
-export function useSearchPokemon(searchTerm: string) {
+export function useSearchPokemon(searchTerm: string, filters?: { type: 'name' | 'id' }, sort?: { field: 'name' | 'id', order: 'asc' | 'desc' }) {
   const apiClient = useApiClient();
   
   return useQuery({
-    queryKey: ['searchPokemon', searchTerm],
+    queryKey: ['searchPokemon', searchTerm, filters, sort],
     queryFn: async () => {
       const data = await apiClient.get<PokemonListResponse>(`/pokemon?limit=1000&offset=0`);
-      return {
-        results: data.results.filter((pokemon: Pokemon) => 
-          pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      };
+      
+      // Filter results based on the search term
+      let results = data.results.filter((pokemon: Pokemon) => {
+        if (!searchTerm || searchTerm.length < 2) return true;
+        
+        // Get the ID from the URL
+        const id = String(getPokemonIdFromUrl(pokemon.url));
+        
+        if (filters?.type === 'id') {
+          // Filter by ID only
+          return id.includes(searchTerm);
+        } else if (filters?.type === 'name') {
+          // Filter by name only
+          return pokemon.name.toLowerCase().includes(searchTerm.toLowerCase());
+        } else {
+          // Filter by both ID and name (default)
+          return pokemon.name.toLowerCase().includes(searchTerm.toLowerCase()) || id.includes(searchTerm);
+        }
+      });
+      
+      // Sort the results if specified
+      if (sort) {
+        results = [...results].sort((a, b) => {
+          if (sort.field === 'name') {
+            // Sort by name
+            return sort.order === 'asc' 
+              ? a.name.localeCompare(b.name)
+              : b.name.localeCompare(a.name);
+          } else {
+            // Sort by ID
+            const idA = getPokemonIdFromUrl(a.url);
+            const idB = getPokemonIdFromUrl(b.url);
+            
+            return sort.order === 'asc' 
+              ? idA - idB 
+              : idB - idA;
+          }
+        });
+      }
+      
+      return { results };
     },
     enabled: !!searchTerm && searchTerm.length > 1,
   });
 }
 
-export function usePokemonByType(type: string | null, limit = 10, offset = 0) {
+// Utility function to extract Pokemon ID from URL
+export const getPokemonIdFromUrl = (url: string): number => {
+  const urlParts = url.split('/');
+  return parseInt(urlParts[urlParts.length - 2], 10);
+};
+
+export function usePokemonByType(types: string[], limit = 10, offset = 0, sort?: { field: 'name' | 'id', order: 'asc' | 'desc' }) {
   const apiClient = useApiClient();
   
   return useQuery({
-    queryKey: ['pokemonByType', type, limit, offset],
+    queryKey: ['pokemonByType', types, limit, offset, sort],
     queryFn: async () => {
-      if (!type) return { pokemon: [], hasMore: false };
+      if (!types || types.length === 0) return { pokemon: [], hasMore: false };
       
-      // Get all Pokémon of the specified type
-      const data = await apiClient.get<{ pokemon: { pokemon: Pokemon }[] }>(`/type/${type}/?limit=${limit}&offset=${offset}`);
-      const allPokemon = data.pokemon.map(entry => entry.pokemon);
+      // Create an array to hold all Pokemon from all selected types
+      let allPokemon: Pokemon[] = [];
+      
+      // If we have multiple types, we need to fetch each one
+      for (const type of types) {
+        const typeData = await apiClient.get<{ pokemon: { pokemon: Pokemon }[] }>(`/type/${type}/?limit=1000`);
+        // Extract just the Pokemon objects and add to our array
+        const typePokemon = typeData.pokemon.map(entry => entry.pokemon);
+        
+        if (types.length === 1) {
+          // For a single type, we can just return these Pokemon
+          allPokemon = typePokemon;
+          break;
+        } else {
+          // If this is not the first type, we need to find the intersection
+          if (allPokemon.length === 0) {
+            allPokemon = typePokemon;
+          } else {
+            // Find Pokemon that exist in both the current list and this type's list
+            // We identify Pokemon by name since that's unique
+            allPokemon = allPokemon.filter(p1 => 
+              typePokemon.some(p2 => p2.name === p1.name)
+            );
+          }
+        }
+      }
+
+      // Sort the results if specified
+      if (sort) {
+        allPokemon = [...allPokemon].sort((a, b) => {
+          if (sort.field === 'name') {
+            // Sort by name
+            return sort.order === 'asc' 
+              ? a.name.localeCompare(b.name)
+              : b.name.localeCompare(a.name);
+          } else {
+            // Sort by ID
+            const idA = getPokemonIdFromUrl(a.url);
+            const idB = getPokemonIdFromUrl(b.url);
+            
+            return sort.order === 'asc' 
+              ? idA - idB 
+              : idB - idA;
+          }
+        });
+      }
       
       // Apply pagination to the results
       const paginatedPokemon = allPokemon.slice(offset, offset + limit);
@@ -77,6 +162,6 @@ export function usePokemonByType(type: string | null, limit = 10, offset = 0) {
         previous: offset > 0 ? `offset=${Math.max(0, offset - limit)}` : null
       };
     },
-    enabled: !!type,
+    enabled: !!types && types.length > 0,
   });
 } 

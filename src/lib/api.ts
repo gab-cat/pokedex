@@ -1,4 +1,4 @@
-const API_URL = "https://pokeapi.co/api/v2";
+export const API_URL = "https://pokeapi.co/api/v2";
 
 export class ApiError extends Error {
   constructor(public status: number, message: string) {

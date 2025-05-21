@@ -31,11 +31,23 @@ export const useFavoritesStore = create<FavoritesState>()(
 
 // Type store to filter Pokémon by type
 interface TypeFilterState {
-  selectedType: string | null;
-  setSelectedType: (type: string | null) => void;
+  selectedTypes: string[];
+  setSelectedType: (type: string) => void;
+  toggleSelectedType: (type: string) => void;
+  clearSelectedTypes: () => void;
+  isTypeSelected: (type: string) => boolean;
 }
 
-export const useTypeFilterStore = create<TypeFilterState>()((set) => ({
-  selectedType: null,
-  setSelectedType: (type: string | null) => set({ selectedType: type })
+export const useTypeFilterStore = create<TypeFilterState>()((set, get) => ({
+  selectedTypes: [],
+  setSelectedType: (type: string) => set({ selectedTypes: [type] }),
+  toggleSelectedType: (type: string) => set((state) => {
+    if (state.selectedTypes.includes(type)) {
+      return { selectedTypes: state.selectedTypes.filter(t => t !== type) };
+    } else {
+      return { selectedTypes: [...state.selectedTypes, type] };
+    }
+  }),
+  clearSelectedTypes: () => set({ selectedTypes: [] }),
+  isTypeSelected: (type: string) => get().selectedTypes.includes(type)
 })); 
