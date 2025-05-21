@@ -14,14 +14,14 @@ type HomeProps = {
 };
 
 export function Home({ initialPokemon = [], initialSelectedType }: HomeProps) {
-  const { setSelectedType } = useTypeFilterStore();
+  const { toggleSelectedType } = useTypeFilterStore();
   
   // Set initial type filter from URL if provided
   useEffect(() => {
     if (initialSelectedType) {
-      setSelectedType(initialSelectedType);
+      toggleSelectedType(initialSelectedType);
     }
-  }, [initialSelectedType, setSelectedType]);
+  }, [initialSelectedType, toggleSelectedType]);
   
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:p-8">

@@ -33,7 +33,7 @@ export function SearchBar() {
         <div className="relative flex-1">
           <Input
             type="text"
-            placeholder="Search Pokémon by name..."
+            placeholder="Search by name or ID number..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onFocus={() => setIsFocused(true)}
@@ -59,6 +59,7 @@ export function SearchBar() {
           <span>Search</span>
         </Button>
       </div>
+      <p className="text-xs text-gray-500 mt-4 text-left">Try searching by name (e.g. &quot;Pikachu&quot;) or ID number (e.g. &quot;25&quot;)</p>
     </form>
   );
 } 

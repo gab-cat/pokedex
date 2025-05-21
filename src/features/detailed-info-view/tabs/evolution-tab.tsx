@@ -14,10 +14,10 @@ type EvolutionTabProps = {
 export function EvolutionTab({ evolutionChain, currentPokemonName }: EvolutionTabProps) {
   return (
     <Card>
-      <CardContent className="p-6">
+      <CardContent className="p-4 py-0">
         <div className="flex items-center gap-2 mb-4">
           <Sparkles className="h-5 w-5 text-red-500" />
-          <h2 className="text-xl font-bold">Evolution Chain</h2>
+          <h2 className="text-xl gradient-text font-bold">Evolution Chain</h2>
         </div>
 
         {evolutionChain.length > 1 ? (

@@ -4,7 +4,7 @@ import { SearchBar } from "@/features/home-page/search-bar";
 export function PokedexHeader() {
   return (
     <div className="flex flex-col items-center mb-8 animate-fade-in animation-delay-900">
-      <h2 className="text-3xl md:text-4xl font-bold text-center mb-2 text-red-500 flex items-center gap-2">
+      <h2 className="text-3xl md:tracking-tight gradient-text md:text-6xl font-bold text-center mb-2 text-red-500 flex items-center gap-2">
         <Star className="h-6 w-6 text-yellow-500" />
         Pokédex
         <Star className="h-6 w-6 text-yellow-500" />

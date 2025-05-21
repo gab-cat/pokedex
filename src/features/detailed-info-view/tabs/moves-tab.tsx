@@ -14,10 +14,10 @@ type MovesTabProps = {
 export function MovesTab({ moves }: MovesTabProps) {
   return (
     <Card>
-      <CardContent className="p-6">
+      <CardContent className="p-4 py-0">
         <div className="flex items-center gap-2 mb-4">
           <Swords className="h-5 w-5 text-red-500" />
-          <h2 className="text-xl font-bold">Moves</h2>
+          <h2 className="text-xl gradient-text font-bold">Moves</h2>
         </div>
         <div className="flex flex-wrap gap-2">
           {moves?.slice(0, 20).map((move, index) => {
@@ -30,7 +30,7 @@ export function MovesTab({ moves }: MovesTabProps) {
             return (
               <span
                 key={move.move.name}
-                className="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm animate-bounce-in"
+                className="bg-gray-100 opacity-0 text-gray-800 px-3 py-1 rounded-full text-sm animate-bounce-in"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
                 {formattedMoveName}

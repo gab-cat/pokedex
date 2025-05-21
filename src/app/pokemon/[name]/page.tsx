@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { PokemonView } from "@/features/detailed-info-view/pokemon-view";
+import { useApiClient } from "@/lib/api";
+import { PokemonDetails } from "@/types";
 
 type PokemonPageProps = {
   params: Promise<{
@@ -9,11 +11,10 @@ type PokemonPageProps = {
 };
 
 export async function generateStaticParams() {
-  // Fetch the first 151 Pokemon (original generation)
-  const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151');
-  const data = await response.json();
+  const apiClient = useApiClient();
+  const pokemonData = await apiClient.get<{ results: { name: string }[] }>(`/pokemon?limit=151`);
   
-  return data.results.map((pokemon: { name: string }) => ({
+  return pokemonData.results.map((pokemon: { name: string }) => ({
     name: pokemon.name,
   }));
 }
@@ -24,16 +25,9 @@ export async function generateMetadata({ params }: PokemonPageProps): Promise<Me
   
   // Fetch basic Pokemon data to get the image
   try {
-    const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName}`);
+    const apiClient = useApiClient();
+    const pokemonData = await apiClient.get<PokemonDetails>(`/pokemon/${pokemonName}`);
     
-    if (!response.ok) {
-      return {
-        title: `${formattedName} | Pokédex`,
-        description: `Learn all about ${formattedName}, including its type, abilities, stats, and more.`
-      };
-    }
-    
-    const pokemonData = await response.json();
     const pokemonImage = pokemonData.sprites.other["official-artwork"].front_default || 
                          pokemonData.sprites.other.home.front_default ||
                          pokemonData.sprites.front_default;
@@ -78,13 +72,8 @@ export async function generateMetadata({ params }: PokemonPageProps): Promise<Me
 
 async function getPokemonData(name: string) {
   try {
-    const pokemonResponse = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-
-    if (!pokemonResponse.ok) {
-      return null;
-    }
-
-    const pokemonData = await pokemonResponse.json();
+    const apiClient = useApiClient();
+    const pokemonData = await apiClient.get<PokemonDetails>(`/pokemon/${name}`);
 
     // Get species data for description
     const speciesResponse = await fetch(pokemonData.species.url);
@@ -195,5 +184,6 @@ export default async function PokemonPage({ params }: PokemonPageProps) {
     notFound();
   }
 
+  // @ts-expect-error - This is a workaround to fix the type error
   return <PokemonView pokemon={pokemon} name={name} />;
 }

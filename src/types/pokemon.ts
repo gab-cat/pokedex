@@ -17,8 +17,12 @@ export type PokemonDetails = {
     other: {
       "official-artwork": {
         front_default: string;
-      }
-    }
+      },
+      home: {
+        front_default: string;
+      },
+    },
+    front_default: string;
   };
   types: {
     type: {
@@ -42,6 +46,11 @@ export type PokemonDetails = {
   species: {
     url: string;
   };
+  moves?: {
+    move: {
+      name: string;
+    };
+  }[];
 };
 
 export type PokemonSpecies = {

@@ -71,6 +71,10 @@
   opacity: 1;
 }
 
+.gradient-text {
+  @apply bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent;
+}
+
 .card-shine {
   position: absolute;
   top: 0;

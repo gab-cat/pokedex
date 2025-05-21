@@ -20,10 +20,10 @@ export function AbilitiesTab({ abilities, pokemon }: AbilitiesTabProps) {
 
   return (
     <Card>
-      <CardContent className="p-6">
+      <CardContent className="p-4 py-0">
         <div className="flex items-center gap-2 mb-4">
           <Zap className="h-5 w-5 text-red-500" />
-          <h2 className="text-xl font-bold">Abilities</h2>
+          <h2 className="text-xl gradient-text font-bold">Abilities</h2>
         </div>
         <ul className="space-y-4">
           {abilities.map((ability, index) => {
@@ -39,7 +39,7 @@ export function AbilitiesTab({ abilities, pokemon }: AbilitiesTabProps) {
             return (
               <li
                 key={ability.ability.name}
-                className="flex items-start animate-slide-up bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
+                className="flex items-start opacity-0 animate-slide-up bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
                 style={{ animationDelay: `${index * 150}ms` }}
               >
                 <div

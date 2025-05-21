@@ -40,7 +40,7 @@ export function PokemonShowcase({ pokemon, name }: PokemonShowcaseProps) {
 
   return (
     <Card className="w-full overflow-hidden">
-      <CardContent className="p-6 flex flex-col items-center">
+      <CardContent className="p-4 py-0 flex flex-col items-center">
         <div className="relative h-64 w-64 mb-4">
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-black/5 rounded-full animate-pulse"></div>
           <div className="absolute inset-0 bg-gray-900/5 rounded-full blur-xl"></div>
@@ -55,7 +55,7 @@ export function PokemonShowcase({ pokemon, name }: PokemonShowcaseProps) {
           />
         </div>
 
-        <h1 className="text-3xl font-bold mb-2">{formattedName}</h1>
+        <h1 className="text-3xl gradient-text font-bold mb-2">{formattedName}</h1>
         <p className="text-lg text-gray-500 mb-2">#{pokemon.id.toString().padStart(3, "0")}</p>
         {pokemon.genus && <p className="text-sm text-gray-600 italic mb-4">{pokemon.genus}</p>}
 

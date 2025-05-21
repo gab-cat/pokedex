@@ -1,13 +1,22 @@
 "use client";
 
+import { useState } from "react";
 import {
   Flame, Droplet, Leaf, Zap, Filter, X, Cloud, Mountain, Brain,
   Ghost, Moon, Dumbbell, Bug, Star, Wind,
-  Sparkles
+  Sparkles, ChevronDown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTypeFilterStore } from "@/lib/stores";
 import { cn } from "@/lib/utils";
+import { 
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuCheckboxItem
+} from "@/components/ui/dropdown-menu";
 
 // All Pokémon types with icons and colors
 const typeIcons: Record<string, { icon: React.ReactNode; color: string; textColor: string }> = {
@@ -32,68 +41,106 @@ const typeIcons: Record<string, { icon: React.ReactNode; color: string; textColo
 };
 
 export function TypeFilters() {
-  const { selectedType, setSelectedType } = useTypeFilterStore();
+  const { selectedTypes, toggleSelectedType, clearSelectedTypes, isTypeSelected } = useTypeFilterStore();
+  const [isOpen, setIsOpen] = useState(false);
 
-  const handleTypeClick = (type: string) => {
-    if (selectedType === type) {
-      setSelectedType(null);
-    } else {
-      setSelectedType(type);
+  const getTypeLabel = () => {
+    if (selectedTypes.length === 0) return "All Types";
+    if (selectedTypes.length === 1) {
+      const type = selectedTypes[0];
+      return type.charAt(0).toUpperCase() + type.slice(1);
     }
+    return `${selectedTypes.length} Types Selected`;
   };
 
-  const clearFilter = () => {
-    setSelectedType(null);
-  };
+  const typeCount = Object.keys(typeIcons).length;
+  const selectedCount = selectedTypes.length;
 
   return (
     <div className="mb-8">
-      <div className="flex justify-between items-center mb-2">
-        <h2 className="text-lg font-semibold flex items-center gap-2">
-          <Filter className="h-5 w-5" />
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold gradient-text flex items-center gap-2">
+          <Filter className="h-5 w-5 text-red-500" />
           Filter by Type
         </h2>
-        {selectedType && (
-          <Button 
-            onClick={clearFilter} 
-            variant="outline" 
-            size="sm" 
-            className="text-xs gap-1"
-          >
-            <X className="h-3 w-3" />
-            Clear filter
-          </Button>
-        )}
+        
+        <div className="flex items-center gap-2">
+          {selectedTypes.length > 0 && (
+            <Button 
+              onClick={clearSelectedTypes} 
+              variant="outline" 
+              size="sm" 
+              className="text-xs gap-1"
+            >
+              <X className="h-3 w-3" />
+              Clear filters
+            </Button>
+          )}
+          
+          <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="gap-2">
+                {getTypeLabel()}
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent  className="w-64 max-h-[70vh] overflow-y-auto">
+              <DropdownMenuLabel className="flex justify-between">
+                <span>Pokémon Types</span>
+                <span className="text-xs text-muted-foreground">{selectedCount} of {typeCount} selected</span>
+              </DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              
+              {Object.entries(typeIcons).map(([type, { icon, color }]) => (
+                <DropdownMenuCheckboxItem
+                  key={type}
+                  checked={isTypeSelected(type)}
+                  onCheckedChange={() => toggleSelectedType(type)}
+                  className="gap-2"
+                >
+                  <div className={cn(
+                    "flex items-center gap-2 py-0.5",
+                  )}>
+                    <span className={cn(
+                      "flex items-center justify-center rounded-full p-1",
+                      color
+                    )}>
+                      {icon}
+                    </span>
+                    <span className="capitalize">{type}</span>
+                  </div>
+                </DropdownMenuCheckboxItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       
-      <div className="flex flex-wrap justify-center gap-2">
-        {Object.entries(typeIcons).map(([type, { icon, color, textColor }]) => (
-          <button 
-            key={type}
-            onClick={() => handleTypeClick(type)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                handleTypeClick(type);
-              }
-            }}
-            tabIndex={0}
-            aria-pressed={selectedType === type}
-            className={cn(
-              "flex items-center gap-2 rounded-full px-3 py-1.5 animate-bounce-in",
-              "transition-all cursor-pointer text-sm",
-              color,
-              textColor,
-              "hover:bg-gray-900/90 hover:text-white",
-              selectedType === type && "ring-2 ring-gray-900 shadow-md"
-            )}
-          >
-            {icon}
-            <span className="font-medium">
-              {type.charAt(0).toUpperCase() + type.slice(1)}
-            </span>
-          </button>
-        ))}
-      </div>
+      {selectedTypes.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {selectedTypes.map(type => {
+            const { icon, color } = typeIcons[type];
+            return (
+              <div
+                key={type}
+                className={cn(
+                  "flex items-center gap-1 rounded-full px-3 py-1",
+                  color
+                )}
+              >
+                {icon}
+                <span className="capitalize">{type}</span>
+                <button
+                  onClick={() => toggleSelectedType(type)}
+                  className="ml-1 rounded-full hover:bg-gray-200 p-0.5"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 } 

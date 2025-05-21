@@ -80,15 +80,15 @@ export function PokemonDetails({ pokemon }: PokemonDetailsProps) {
     <div className="flex flex-col gap-6">
       <Tabs defaultValue="stats" className="w-full">
         <TabsList className="grid grid-cols-3 mb-4">
-          <TabsTrigger value="stats" className="flex items-center gap-1">
+          <TabsTrigger value="stats" className="flex items-center gap-1 data-[state=active]:text-red-500">
             <BarChart3 className="h-4 w-4" />
             Stats
           </TabsTrigger>
-          <TabsTrigger value="abilities" className="flex items-center gap-1">
+          <TabsTrigger value="abilities" className="flex items-center gap-1 data-[state=active]:text-red-500">
             <Zap className="h-4 w-4" />
             Abilities
           </TabsTrigger>
-          <TabsTrigger value="moves" className="flex items-center gap-1">
+          <TabsTrigger value="moves" className="flex items-center gap-1 data-[state=active]:text-red-500">
             <Swords className="h-4 w-4" />
             Moves
           </TabsTrigger>

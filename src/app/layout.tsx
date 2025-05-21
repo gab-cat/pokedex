@@ -6,6 +6,7 @@ import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
 import { QueryProvider } from "@/components/providers";
 import { Toaster } from "@/components/ui/sonner";
+import { SplashScreen } from "@/components/splash-screen";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -57,10 +58,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <QueryProvider>
-          <Navbar />
-          <div className="pt-20">{children}</div>
-          <Footer />
-          <Toaster />
+          <SplashScreen>
+            <Navbar />
+            <div className="pt-20">{children}</div>
+            <Footer />
+            <Toaster />
+          </SplashScreen>
         </QueryProvider>
       </body>
     </html>

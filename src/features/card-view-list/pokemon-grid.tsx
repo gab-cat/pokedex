@@ -1,13 +1,23 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Loader2, ChevronDown } from "lucide-react";
+import { Loader2, ChevronDown, ArrowUp, ArrowDown } from "lucide-react";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { PokemonCard } from "./pokemon-card";
 import { Button } from "@/components/ui/button";
-import { usePokemonList, usePokemonByType } from "@/lib/hooks";
+import { usePokemonList, usePokemonByType, getPokemonIdFromUrl } from "@/lib/hooks";
 import { useTypeFilterStore } from "@/lib/stores";
 import { Pokemon } from "@/types";
-import { formatName } from "@/lib/utils";
+import { 
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuItem
+} from "@/components/ui/dropdown-menu";
+
+type SortOption = { field: 'name' | 'id', order: 'asc' | 'desc' };
 
 type PokemonGridProps = {
   initialPokemon?: Pokemon[];
@@ -19,39 +29,63 @@ export function PokemonGrid({ initialPokemon = [] }: PokemonGridProps) {
   const [loadingAnimation, setLoadingAnimation] = useState(false);
   const [typeOffset, setTypeOffset] = useState(0);
   const [typeFilteredList, setTypeFilteredList] = useState<Pokemon[]>([]);
+  const [sort, setSort] = useState<SortOption>({ field: 'id', order: 'asc' });
   
   const limit = 10;
   const { data, isLoading, isFetching } = usePokemonList(limit, offset);
   
-  const { selectedType } = useTypeFilterStore();
+  const { selectedTypes } = useTypeFilterStore();
   const { 
     data: typeFilteredData, 
     isLoading: isTypeFilterLoading,
     isFetching: isTypeFilterFetching
-  } = usePokemonByType(selectedType, limit, typeOffset);
+  } = usePokemonByType(selectedTypes, limit, typeOffset, sort);
+
+  const [parent] = useAutoAnimate();
   
   // Reset offsets when changing type filter
   useEffect(() => {
-    if (selectedType) {
+    if (selectedTypes.length > 0) {
       setTypeOffset(0);
       setTypeFilteredList([]);
     } else {
       setOffset(initialPokemon.length || 0);
     }
-  }, [selectedType, initialPokemon.length]);
+  }, [selectedTypes, initialPokemon.length]);
   
   // Update typeFilteredList when new type data arrives
   useEffect(() => {
-    if (typeFilteredData?.results && selectedType) {
+    if (typeFilteredData?.results && selectedTypes.length > 0) {
       if (typeOffset === 0) {
         setTypeFilteredList(typeFilteredData.results);
       } else {
         setTypeFilteredList(prev => [...prev, ...typeFilteredData.results]);
       }
     }
-  }, [typeFilteredData, selectedType, typeOffset]);
+  }, [typeFilteredData, selectedTypes, typeOffset]);
+
+  // Apply sort to main pokemon list
+  useEffect(() => {
+    if (data?.results && selectedTypes.length === 0) {
+      // Create a copy of the current data to sort instead of using pokemonList
+      const currentPokemon = [...data.results];
+      const sortedResults = currentPokemon.sort((a, b) => {
+        if (sort.field === 'name') {
+          return sort.order === 'asc'
+            ? a.name.localeCompare(b.name)
+            : b.name.localeCompare(a.name);
+        } else {
+          const idA = getPokemonIdFromUrl(a.url);
+          const idB = getPokemonIdFromUrl(b.url);
+          return sort.order === 'asc' ? idA - idB : idB - idA;
+        }
+      });
+      
+      setPokemonList(sortedResults);
+    }
+  }, [sort, data?.results, selectedTypes]); // Remove pokemonList from dependencies
   
-  const hasMore = selectedType 
+  const hasMore = selectedTypes.length > 0
     ? typeFilteredData?.hasMore 
     : data?.next !== null;
   
@@ -61,7 +95,7 @@ export function PokemonGrid({ initialPokemon = [] }: PokemonGridProps) {
     if (loading || !hasMore) return;
     setLoadingAnimation(true);
     
-    if (selectedType) {
+    if (selectedTypes.length > 0) {
       // Load more filtered Pokemon
       setTypeOffset(typeOffset + limit);
     } else {
@@ -70,7 +104,24 @@ export function PokemonGrid({ initialPokemon = [] }: PokemonGridProps) {
       
       if (data?.results) {
         setTimeout(() => {
-          setPokemonList([...pokemonList, ...data.results]);
+          // Apply sorting to new pokemon without creating dependency on pokemonList
+          const newPokemon = [...data.results];
+          
+          // Sort the new pokemon according to the current sort settings
+          const sortedNewPokemon = newPokemon.sort((a, b) => {
+            if (sort.field === 'name') {
+              return sort.order === 'asc'
+                ? a.name.localeCompare(b.name)
+                : b.name.localeCompare(a.name);
+            } else {
+              const idA = getPokemonIdFromUrl(a.url);
+              const idB = getPokemonIdFromUrl(b.url);
+              return sort.order === 'asc' ? idA - idB : idB - idA;
+            }
+          });
+          
+          // Append the sorted new pokemon to the existing list
+          setPokemonList(currentList => [...currentList, ...sortedNewPokemon]);
           
           setTimeout(() => {
             setLoadingAnimation(false);
@@ -86,21 +137,54 @@ export function PokemonGrid({ initialPokemon = [] }: PokemonGridProps) {
   };
 
   // Determine which data to display - filtered or regular
-  const displayedPokemon = selectedType 
+  const displayedPokemon = selectedTypes.length > 0 
     ? typeFilteredList 
     : (pokemonList.length > 0 ? pokemonList : (data?.results || []));
 
   // Calculate total count for display
-  const totalCount = selectedType
+  const totalCount = selectedTypes.length > 0
     ? typeFilteredData?.count || 0
     : null;
 
+  const getSortLabel = () => {
+    return `${sort.field === 'name' ? 'Name' : 'ID'} ${sort.order === 'asc' ? '↑' : '↓'}`;
+  };
+
   return (
     <div className="w-full">
+      {/* Sorting options */}
+      <div className="mb-6 flex justify-end">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="sm" className="gap-2">
+              {sort.order === 'asc' ? <ArrowUp className="h-4 w-4" /> : <ArrowDown className="h-4 w-4" />}
+              Sort: {getSortLabel()}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuLabel>Sort By</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => setSort({ field: 'name', order: 'asc' })} className={sort.field === 'name' && sort.order === 'asc' ? 'bg-accent' : ''}>
+              <ArrowUp className="h-4 w-4 mr-2" /> Name (A-Z)
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setSort({ field: 'name', order: 'desc' })} className={sort.field === 'name' && sort.order === 'desc' ? 'bg-accent' : ''}>
+              <ArrowDown className="h-4 w-4 mr-2" /> Name (Z-A)
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => setSort({ field: 'id', order: 'asc' })} className={sort.field === 'id' && sort.order === 'asc' ? 'bg-accent' : ''}>
+              <ArrowUp className="h-4 w-4 mr-2" /> ID (Low-High)
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setSort({ field: 'id', order: 'desc' })} className={sort.field === 'id' && sort.order === 'desc' ? 'bg-accent' : ''}>
+              <ArrowDown className="h-4 w-4 mr-2" /> ID (High-Low)
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+
       {isTypeFilterLoading && typeOffset === 0 ? (
         <div className="flex justify-center items-center py-20">
           <Loader2 className="h-10 w-10 animate-spin text-red-500" />
-          <span className="ml-2 text-lg">Loading {selectedType} Pokémon...</span>
+          <span className="ml-2 text-lg">Loading Pokémon...</span>
         </div>
       ) : displayedPokemon.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -109,15 +193,15 @@ export function PokemonGrid({ initialPokemon = [] }: PokemonGridProps) {
         </div>
       ) : (
         <>
-          {selectedType && totalCount && (
+          {selectedTypes.length > 0 && totalCount && (
             <div className="mb-4 text-center">
               <span className="text-sm font-medium text-gray-500">
-                Found {totalCount} {selectedType}-type Pokémon • Showing {displayedPokemon.length} of {totalCount}
+                Found {totalCount} Pokémon with selected types • Showing {displayedPokemon.length} of {totalCount}
               </span>
             </div>
           )}
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div ref={parent} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {displayedPokemon.map((poke, index) => (
               <div key={`${poke.name}-${index}`} className="animate-bounce-in" style={{ animationDelay: `${(index % 8) * 100}ms` }}>
                 <PokemonCard name={poke.name} />
@@ -143,7 +227,7 @@ export function PokemonGrid({ initialPokemon = [] }: PokemonGridProps) {
             ) : (
               <>
                 <ChevronDown className="h-5 w-5 animate-bounce" />
-                Discover More {selectedType ? `${formatName(selectedType)} ` : ''}Pokémon
+                Discover More Pokémon
               </>
             )}
           </Button>

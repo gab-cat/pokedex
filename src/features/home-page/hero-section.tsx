@@ -17,15 +17,15 @@ export function HeroSection() {
             Your interactive guide to discovering, learning about, and falling in love with these amazing creatures.
           </p>
           <div className="flex flex-wrap gap-4 animate-slide-up animation-delay-600">
-            <div className="flex items-center gap-2 bg-gray-900/90 rounded-full px-4 py-2">
+            <div className="flex items-center gap-2 bg-gray-800/80 rounded-full px-4 py-2">
               <Sparkles className="h-5 w-5 text-yellow-300" />
               <span>800+ Pokémon</span>
             </div>
-            <div className="flex items-center gap-2 bg-gray-900/90 rounded-full px-4 py-2">
+            <div className="flex items-center gap-2 bg-gray-800/80 rounded-full px-4 py-2">
               <Zap className="h-5 w-5 text-yellow-300" />
               <span>Detailed Stats</span>
             </div>
-            <div className="flex items-center gap-2 bg-gray-900/90 rounded-full px-4 py-2">
+            <div className="flex items-center gap-2 bg-gray-800/80 rounded-full px-4 py-2">
               <Heart className="h-5 w-5 text-yellow-300" />
               <span>Fan Favorite</span>
             </div>

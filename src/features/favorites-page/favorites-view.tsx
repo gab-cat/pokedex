@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useFavoritesStore } from "@/lib/stores";
 import { PokemonCard } from "@/features/card-view-list/pokemon-card";
 import { Pokemon } from "@/types";
+import { API_URL } from "@/lib/api";
 
 export function FavoritesView() {
   const { favorites } = useFavoritesStore();
@@ -14,7 +15,6 @@ export function FavoritesView() {
   const [favoritePokemons, setFavoritePokemons] = useState<Pokemon[]>([]);
 
   useEffect(() => {
-    // This needs to be client-side because we're using localStorage through Zustand
     const fetchFavorites = async () => {
       setIsLoading(true);
       
@@ -24,10 +24,9 @@ export function FavoritesView() {
         return;
       }
       
-      // Convert favorites names to Pokemon objects for the grid
       const pokemonList = favorites.map(name => ({
         name,
-        url: `https://pokeapi.co/api/v2/pokemon/${name}`
+        url: `${API_URL}/pokemon/${name}`
       }));
       
       setFavoritePokemons(pokemonList);
@@ -55,7 +54,7 @@ export function FavoritesView() {
           
           <div className="flex items-center">
             <Heart className="h-6 w-6 mr-2 text-red-500" fill="currentColor" />
-            <h1 className="text-3xl font-bold">Your Favorite Pokémon</h1>
+            <h1 className="text-3xl gradient-text tracking-tight font-bold">Your Favorite Pokémon</h1>
           </div>
         </div>
         
