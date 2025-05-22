@@ -69,21 +69,21 @@ function NavbarComponent() {
           <nav className="hidden md:flex items-center space-x-1">
             <Link href="/">
               <Button variant={pathname === "/" ? "default" : "ghost"} size="sm" className="rounded-full">
-                <Home className="h-4 w-4 mr-2" />
+                <Home className="h-4 w-4 mr-2" aria-label="Home" />
                 Home
               </Button>
             </Link>
 
             <Link href="/search">
               <Button variant={pathname === "/search" ? "default" : "ghost"} size="sm" className="rounded-full">
-                <Search className="h-4 w-4 mr-2" />
+                <Search className="h-4 w-4 mr-2" aria-label="Search" />
                 Search
               </Button>
             </Link>
 
             <Link href="/favorites">
               <Button variant={pathname === "/favorites" ? "default" : "ghost"} size="sm" className="rounded-full">
-                <Heart className="h-4 w-4 mr-2" />
+                <Heart className="h-4 w-4 mr-2" aria-label="Favorites" />
                 Favorites
               </Button>
             </Link>
@@ -97,23 +97,22 @@ function NavbarComponent() {
                 placeholder="Search Pokémon..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className={cn("w-40 lg:w-64 h-9 rounded-full pl-9 pr-4 bg-gray-100 border-none focus:ring-2 focus:ring-red-500",
-                  isScrolled ? "text-white placeholder:text-white" : "text-gray-800 placeholder:text-gray-400"
-                )}
+                className={cn("w-40 lg:w-64 h-9 rounded-full pl-9 pr-4 bg-gray-100 text-white placeholder:text-gray-400 border-none focus:ring-2 focus:ring-red-500")}
               />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" aria-hidden="true" />
             </form>
             <Button variant="ghost" size="icon" className="md:hidden" onClick={toggleMenu}>
-              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {isMenuOpen ? <X className="h-5 w-5" aria-label="Close Menu" /> : <Menu className="h-5 w-5" aria-label="Open Menu" />}
             </Button>
           </div>
         </div>
 
         {/* Mobile Menu */}
         <div
-          className={`md:hidden text-white overflow-hidden transition-all duration-300 ease-in-out ${
+          className={cn(
+            "md:hidden text-white overflow-hidden transition-all duration-300 ease-in-out",
             isMenuOpen ? "max-h-[80vh] mt-4 overflow-y-auto" : "max-h-0"
-          }`}
+          )}
         >
           <div className="flex flex-col space-y-2 py-2">
             <form onSubmit={handleSearch} className="relative mb-2">
@@ -124,26 +123,26 @@ function NavbarComponent() {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full h-10 rounded-full pl-9 pr-4 bg-gray-200 border-none placeholder:text-gray-200"
               />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-200" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-200" aria-hidden="true" />
             </form>
 
             <Link href="/" onClick={() => setIsMenuOpen(false)}>
-              <Button variant={pathname === "/" ? "default" : "ghost"} className="w-full justify-start rounded-lg">
-                <Home className="h-4 w-4 mr-2" />
+              <Button variant={pathname === "/" ? "default" : "ghost"} className="w-full justify-start rounded-full">
+                <Home className="h-4 w-4 mr-2" aria-label="Home" />
                 Home
               </Button>
             </Link>
 
             <Link href="/search">
-              <Button variant={pathname === "/search" ? "default" : "ghost"} size="sm" className="w-full justify-start rounded-lg">
-                <Search className="h-4 w-4 mr-2" />
+              <Button variant={pathname === "/search" ? "default" : "ghost"} size="sm" className="w-full justify-start rounded-full">
+                <Search className="h-4 w-4 mr-2" aria-label="Search" />
                 Search
               </Button>
             </Link>
 
             <Link href="/favorites" onClick={() => setIsMenuOpen(false)}>
-              <Button variant={pathname === "/favorites" ? "default" : "ghost"} className="w-full justify-start rounded-lg">
-                <Heart className="h-4 w-4 mr-2" />
+              <Button variant={pathname === "/favorites" ? "default" : "ghost"} className="w-full justify-start rounded-full">
+                <Heart className="h-4 w-4 mr-2" aria-label="Favorites" />
                 Favorites
               </Button>
             </Link>

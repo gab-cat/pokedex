@@ -5,24 +5,10 @@ import { Ruler, Scale, ShieldAlert } from "lucide-react";
 import { getTypeWeaknesses } from "./utils";
 import { getTypeIcon } from "./get-type-icon";
 import { Card, CardContent } from "@/components/ui/card";
+import { PokemonDetails } from "@/types/pokemon";
 
 type PokemonShowcaseProps = {
-  pokemon: {
-    id: number;
-    sprites: {
-      other: {
-        "official-artwork": {
-          front_default: string;
-        };
-      };
-    };
-    types: {
-      type: {
-        name: string;
-      };
-    }[];
-    height: number;
-    weight: number;
+  pokemon: Pick<PokemonDetails, 'id' | 'sprites' | 'types' | 'height' | 'weight'> & {
     genus?: string;
   };
   name: string;

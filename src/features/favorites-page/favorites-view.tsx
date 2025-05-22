@@ -44,7 +44,7 @@ export function FavoritesView() {
             <Link href="/">
               <Button 
                 variant="outline" 
-                className="mb-4 md:mb-0 gap-2 bg-gradient-to-r from-red-500/80 to-red-600/80 text-white border-0 hover:from-red-600/90 hover:to-red-700/90 hover:text-white transition-all shadow-md hover:shadow-lg"
+                className="mb-4 md:mb-0 gap-2 bg-gradient-to-r rounded-full from-red-500/80 to-red-600/80 text-white border-0 hover:from-red-600/90 hover:to-red-700/90 hover:text-white transition-all shadow-md hover:shadow-lg"
               >
                 <ChevronLeft className="h-4 w-4" />
                 Back to Pokédex

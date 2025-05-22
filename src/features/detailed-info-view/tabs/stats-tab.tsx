@@ -2,8 +2,8 @@
 
 import { BarChart3, Heart, Shield, Sparkles, Sword, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
+import { PokemonDetails } from "../../../types/pokemon";
 import { Card, CardContent } from "@/components/ui/card";
-import { PokemonDetails } from "@/types/pokemon";
 
 type StatsTabProps = {
   stats: PokemonDetails["stats"];

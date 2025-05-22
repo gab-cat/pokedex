@@ -2,32 +2,12 @@ import { PokemonHeader } from "./pokemon-header";
 import { PokemonShowcase } from "./pokemon-showcase";
 import { PokemonDetails } from "./pokemon-details";
 import { AboutTab } from "./tabs";
+import { EvolutionChain, PokemonDetails as PokemonDetailsType } from "@/types/pokemon";
 
 type PokemonViewProps = {
-  pokemon: {
-    id: number;
+  pokemon: Pick<PokemonDetailsType, 'id' | 'sprites' | 'types' | 'height' | 'weight' | 'stats'> & {
     name?: string;
     description: string;
-    sprites: {
-      other: {
-        "official-artwork": {
-          front_default: string;
-        };
-      };
-    };
-    types: {
-      type: {
-        name: string;
-      };
-    }[];
-    height: number;
-    weight: number;
-    stats: {
-      base_stat: number;
-      stat: {
-        name: string;
-      };
-    }[];
     abilities: {
       ability: {
         name: string;
@@ -42,13 +22,9 @@ type PokemonViewProps = {
       };
     }[];
     genus?: string;
-    evolutionChain?: {
-      name: string;
-      url: string;
+    evolutionChain?: Array<Omit<EvolutionChain, 'species' | 'evolves_to' | 'is_baby'> & {
       min_level: number | null;
-      trigger?: string;
-      item?: string;
-    }[];
+    }>;
     habitat?: string;
     generation: string;
     growthRate: string;

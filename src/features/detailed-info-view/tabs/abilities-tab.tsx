@@ -1,8 +1,8 @@
 "use client";
 
 import { Zap, Sparkles } from "lucide-react";
+import { PokemonDetails } from "../../../types/pokemon";
 import { Card, CardContent } from "@/components/ui/card";
-import { PokemonDetails } from "@/types/pokemon";
 
 type AbilitiesTabProps = {
   abilities: PokemonDetails["abilities"];

@@ -2,40 +2,29 @@
 
 import { BarChart3, Swords, Zap } from "lucide-react";
 import { StatsTab, AbilitiesTab, MovesTab, EvolutionTab } from "./tabs";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EvolutionChain, PokemonDetails as PokemonDetailsType } from "@/types/pokemon";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type PokemonDetailsProps = {
-  pokemon: {
-    id: number;
+  pokemon: Pick<PokemonDetailsType, 'id' | 'stats'> & {
     name?: string;
     description: string;
-    stats: {
-      base_stat: number;
-      stat: {
-        name: string;
-      };
-    }[];
-    abilities: {
+    abilities: Array<{
       ability: {
         name: string;
         url?: string;
       };
       is_hidden: boolean;
       description?: string;
-    }[];
+    }>;
     moves: {
       move: {
         name: string;
       };
     }[];
-    evolutionChain?: {
-      name: string;
-      url: string;
+    evolutionChain?: Array<Omit<EvolutionChain, 'species' | 'evolves_to' | 'is_baby'> & {
       min_level: number | null;
-      trigger?: string;
-      item?: string;
-    }[];
+    }>;
     habitat?: string;
     generation: string;
     growthRate: string;
@@ -78,17 +67,17 @@ export function PokemonDetails({ pokemon }: PokemonDetailsProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      <Tabs defaultValue="stats" className="w-full">
-        <TabsList className="grid grid-cols-3 mb-4">
-          <TabsTrigger value="stats" className="flex items-center gap-1 data-[state=active]:text-red-500">
+      <Tabs defaultValue="stats" className="w-full rounded-full">
+        <TabsList className="grid grid-cols-3 mb-4 rounded-full pb-2">
+          <TabsTrigger value="stats" className="flex items-center gap-1 data-[state=active]:text-red-500 data-[state=active]:bg-red-100 rounded-full">
             <BarChart3 className="h-4 w-4" />
             Stats
           </TabsTrigger>
-          <TabsTrigger value="abilities" className="flex items-center gap-1 data-[state=active]:text-red-500">
+          <TabsTrigger value="abilities" className="flex items-center gap-1 data-[state=active]:text-red-500 data-[state=active]:bg-red-100 rounded-full">
             <Zap className="h-4 w-4" />
             Abilities
           </TabsTrigger>
-          <TabsTrigger value="moves" className="flex items-center gap-1 data-[state=active]:text-red-500">
+          <TabsTrigger value="moves" className="flex items-center gap-1 data-[state=active]:text-red-500 data-[state=active]:bg-red-100 rounded-full">
             <Swords className="h-4 w-4" />
             Moves
           </TabsTrigger>

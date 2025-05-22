@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { useApiClient } from './api';
 import { 
   Pokemon,
   PokemonListResponse, 
   PokemonDetails, 
   PokemonSpecies 
-} from '@/types/pokemon';
+} from '../types/pokemon';
+import { useApiClient } from './api';
 
 export function usePokemonList(limit = 20, offset = 0) {
   const apiClient = useApiClient();

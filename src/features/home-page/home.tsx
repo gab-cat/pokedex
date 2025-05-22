@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
+import { Pokemon } from "../../types/pokemon";
 import { HeroSection } from "./hero-section";
 import { PokedexHeader } from "./pokedex-header";
 import { TypeFilters } from "./type-filters";
 import { PokemonGrid } from "@/features/card-view-list/pokemon-grid";
-import { Pokemon } from "@/types/pokemon";
 import { useTypeFilterStore } from "@/lib/stores";
 
 type HomeProps = {

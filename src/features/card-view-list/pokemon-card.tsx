@@ -70,7 +70,7 @@ export function PokemonCard({ name }: PokemonCardProps) {
               onClick={handleFavoriteClick}
               className={`p-1 rounded-full ${isFavorite(name) ? 'bg-red-500 text-white' : 'bg-gray-900/60 text-gray-100'} hover:scale-110 transition-all duration-200`}
             >
-              <Heart className="h-4 w-4" fill={isFavorite(name) ? "white" : "none"} />
+              <Heart className="h-4 w-4" fill={isFavorite(name) ? "white" : "none"} aria-label={isFavorite(name) ? "Remove from favorites" : "Add to favorites"} />
             </button>
           </div>
         )}

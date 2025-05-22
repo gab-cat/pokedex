@@ -49,7 +49,7 @@ export function SearchResults() {
       <div className="w-full max-w-7xl">
         <div className="mb-8">
           <Link href="/">
-            <Button variant="outline" className="gap-2 bg-white hover:bg-gray-50 mb-6 shadow-sm group transition-all">
+            <Button variant="outline" className="gap-2 rounded-full bg-white hover:bg-gray-50 mb-6 shadow-sm group transition-all">
               <ChevronLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
               Back to Pokédex
             </Button>

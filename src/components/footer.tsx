@@ -2,7 +2,7 @@
 
 import { memo } from "react";
 import Link from "next/link";
-import { Github, Heart, Zap, Code, User } from "lucide-react";
+import { Github, Heart, Zap, Code, User, Home, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 function FooterComponent() {
@@ -94,23 +94,18 @@ function FooterComponent() {
               </h3>
               <ul className="space-y-2 text-center md:text-left">
                 <li>
-                  <Link href="/" className="text-white/80 hover:text-white transition-colors">
-                    Home
+                  <Link href="/" className="text-white/80 hover:text-yellow-300 hover:underline transition-colors flex items-center gap-2">
+                    <Home className="h-4 w-4 text-yellow-300" /> Home
                   </Link>
                 </li>
                 <li>
-                  <Link href="/search" className="text-white/80 hover:text-white transition-colors">
-                    Search
+                  <Link href="/search" className="text-white/80 hover:text-yellow-300 hover:underline transition-colors flex items-center gap-2">
+                    <Search className="h-4 w-4 text-yellow-300" /> Search
                   </Link>
                 </li>
                 <li>
-                  <Link href="/?type=fire" className="text-white/80 hover:text-white transition-colors">
-                    Types
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/favorites" className="text-white/80 hover:text-white transition-colors">
-                    Favorites
+                  <Link href="/favorites" className="text-white/80 hover:text-yellow-300 hover:underline transition-colors flex items-center gap-2">
+                    <Heart className="h-4 w-4 text-yellow-300" /> Favorites
                   </Link>
                 </li>
               </ul>

@@ -6,9 +6,9 @@ import { ChevronLeft, ArrowRight, ArrowLeft, Share2, Check, Heart } from "lucide
 import { useParams } from "next/navigation";
 import { toast } from "sonner";
 import { useQueries } from "@tanstack/react-query";
+import { PokemonDetails } from "../../types/pokemon";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PokemonDetails } from "@/types/pokemon";
 import { useFavoritesStore } from "@/lib/stores";
 import { useApiClient } from "@/lib/api";
 import { cn } from "@/lib/utils";
@@ -94,7 +94,7 @@ export function PokemonHeader({ pokemonId, name = "" }: PokemonHeaderProps) {
           <Button 
             variant="outline" 
             size="sm"
-            className="gap-1 transition-all border text-xs sm:text-sm sm:gap-2">
+            className="gap-1 rounded-full transition-all border text-xs sm:text-sm sm:gap-2">
             <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
             <span className="hidden xs:inline">Back to Pokédex</span>
             <span className="xs:hidden">Back</span>
@@ -104,7 +104,7 @@ export function PokemonHeader({ pokemonId, name = "" }: PokemonHeaderProps) {
         <Button 
           variant="outline"
           size="sm" 
-          className="gap-1 sm:gap-2 bg-gradient-to-r from-blue-500/80 to-blue-600/80 text-white border-0 hover:from-blue-600/90 hover:to-blue-700/90 hover:text-white transition-all shadow-md hover:shadow-lg text-xs sm:text-sm"
+          className="gap-1 sm:gap-2 rounded-full bg-gradient-to-r from-blue-500/80 to-blue-600/80 text-white border-0 hover:from-blue-600/90 hover:to-blue-700/90 hover:text-white transition-all shadow-md hover:shadow-lg text-xs sm:text-sm"
           onClick={copyToClipboard}
           title="Share Pokemon"
         >
@@ -115,7 +115,7 @@ export function PokemonHeader({ pokemonId, name = "" }: PokemonHeaderProps) {
         <Button
           size="sm" 
           className={cn(
-            "gap-1 sm:gap-2 text-xs sm:text-sm",
+            "gap-1 sm:gap-2 rounded-full text-xs sm:text-sm",
             isFavorite(pokemonName) ? "bg-white text-red-500 hover:bg-red-200 border" : "bg-gradient-to-r from-red-500/80 to-red-600/80 hover:from-red-600/90 hover:to-red-700/90"
           )}
           onClick={toggleFavorite}
@@ -129,14 +129,14 @@ export function PokemonHeader({ pokemonId, name = "" }: PokemonHeaderProps) {
       <div className="flex flex-wrap gap-2 justify-center sm:justify-end w-full sm:w-auto">
         {isPrevLoading ? (
           <div className="h-8 sm:h-10 w-[100px] sm:w-[140px]">
-            <Skeleton className="h-full w-full rounded-md bg-gray-300/20 animate-pulse" />
+            <Skeleton className="h-full w-full rounded-full bg-gray-300/20 animate-pulse" />
           </div>
         ) : prevPokemon && (
           <Link prefetch href={`/pokemon/${prevPokemon.name}`}>
             <Button 
               variant="default"
               size="sm" 
-              className="gap-1 sm:gap-2 animate-slideUp bg-gray-700/90 text-white border-0 hover:bg-gray-900/100 transition-all shadow-md hover:shadow-lg text-xs sm:text-sm"
+              className="gap-1 sm:gap-2 rounded-full animate-slideUp bg-gray-700/90 text-white border-0 hover:bg-gray-900/100 transition-all shadow-md hover:shadow-lg text-xs sm:text-sm"
               title={`Previous: ${formatName(prevPokemon.name)}`}
             >
               <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -148,14 +148,14 @@ export function PokemonHeader({ pokemonId, name = "" }: PokemonHeaderProps) {
 
         {isNextLoading ? (
           <div className="h-8 sm:h-10 w-[100px] sm:w-[140px]">
-            <Skeleton className="h-full w-full rounded-md bg-gray-300/20 animate-pulse" />
+            <Skeleton className="h-full w-full rounded-full bg-gray-300/20 animate-pulse" />
           </div>
         ) : nextPokemon && (
           <Link prefetch href={`/pokemon/${nextPokemon.name}`}>
             <Button 
               variant="default"
               size="sm" 
-              className="gap-1 sm:gap-2 animate-slideUp bg-gray-700/90 text-white border-0 hover:bg-gray-900/100 transition-all shadow-md hover:shadow-lg text-xs sm:text-sm"
+              className="gap-1 sm:gap-2 rounded-full animate-slideUp bg-gray-700/90 text-white border-0 hover:bg-gray-900/100 transition-all shadow-md hover:shadow-lg text-xs sm:text-sm"
               title={`Next: ${formatName(nextPokemon.name)}`}
             >
               <span className="hidden xs:inline">Next:</span> #{(pokemonId + 1).toString().padStart(3, '0')} - {formatName(nextPokemon.name).substring(0, 12)}{nextPokemon.name.length > 12 ? "..." : ""}
