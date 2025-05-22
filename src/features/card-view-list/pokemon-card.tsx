@@ -4,13 +4,13 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Dumbbell, Ruler, Heart } from "lucide-react";
-import { toast } from "sonner";
 import { getTypeIcon } from "../detailed-info-view/get-type-icon";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { usePokemonDetails } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 import { useFavoritesStore } from "@/lib/stores";
+import { showToast } from "@/lib/toast";
 
 type PokemonCardProps = {
   name: string;
@@ -42,10 +42,10 @@ export function PokemonCard({ name }: PokemonCardProps) {
     
     if (isFavorite(name)) {
       removeFavorite(name);
-      toast.error(`${formattedName} removed from favorites`);
+      showToast({ type: 'info', title: `${formattedName} removed from favorites`, description: 'You can view your favorites in the favorites page' });
     } else {
       addFavorite(name);
-      toast.success(`${formattedName} added to favorites`);
+      showToast({ type: 'success', title: `${formattedName} added to favorites`, description: 'You can view your favorites in the favorites page' });
     }
   };
 

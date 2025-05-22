@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { ChevronLeft, ArrowRight, ArrowLeft, Share2, Check, Heart } from "lucide-react";
 import { useParams } from "next/navigation";
-import { toast } from "sonner";
 import { useQueries } from "@tanstack/react-query";
 import { PokemonDetails } from "../../types/pokemon";
 import { Button } from "@/components/ui/button";
@@ -12,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useFavoritesStore } from "@/lib/stores";
 import { useApiClient } from "@/lib/api";
 import { cn } from "@/lib/utils";
+import { showToast } from "@/lib/toast";
 
 type PokemonHeaderProps = {
   pokemonId: number;
@@ -74,16 +74,16 @@ export function PokemonHeader({ pokemonId, name = "" }: PokemonHeaderProps) {
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000);
     });
-    toast.success("Link copied to clipboard");
+    showToast({ type: 'info', title: "Link copied to clipboard", description: "You can now share the link with your friends" });
   };
 
   const toggleFavorite = () => {
     if (isFavorite(pokemonName)) {
       removeFavorite(pokemonName);
-      toast.success(`${formatName(pokemonName)} removed from favorites`);
+      showToast({ type: 'info', title: `${formatName(pokemonName)} removed from favorites`, description: 'You can view your favorites in the favorites page' });
     } else {
       addFavorite(pokemonName);
-      toast.success(`${formatName(pokemonName)} added to favorites`);
+      showToast({ type: 'success', title: `${formatName(pokemonName)} added to favorites`, description: 'You can view your favorites in the favorites page' });
     }
   };
 
