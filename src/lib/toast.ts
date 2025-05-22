@@ -46,7 +46,7 @@ const toastStyles = {
 export const showToast = ({ type, title, description, duration }: ShowToastParams) => {
   toast[type](title, {
     description,
-    duration: duration || toastStyles[type].defaultDuration,
+    duration: duration ?? toastStyles[type].defaultDuration,
     style: toastStyles[type].style,
     icon: toastStyles[type].icon(),
     position: "top-right",

@@ -97,7 +97,7 @@ function NavbarComponent() {
                 placeholder="Search Pokémon..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className={cn("w-40 lg:w-64 h-9 rounded-full pl-9 pr-4 bg-gray-100 text-white placeholder:text-gray-400 border-none focus:ring-2 focus:ring-red-500")}
+                className={"w-40 lg:w-64 h-9 rounded-full pl-9 pr-4 bg-gray-100 text-gray-800 dark:text-white placeholder:text-gray-400 border-none focus:ring-2 focus:ring-red-500"}
               />
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" aria-hidden="true" />
             </form>
