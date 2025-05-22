@@ -42,6 +42,7 @@ type Props = {
 };
 
 export const revalidate = 300;
+export const dynamic = 'force-static';
 
 export default async function HomePage({ searchParams }: Props) {
   const params = await searchParams;

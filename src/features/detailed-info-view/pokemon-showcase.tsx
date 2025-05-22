@@ -6,6 +6,7 @@ import { getTypeWeaknesses } from "./utils";
 import { getTypeIcon } from "./get-type-icon";
 import { Card, CardContent } from "@/components/ui/card";
 import { PokemonDetails } from "@/types/pokemon";
+import { cn } from "@/lib/utils";
 
 type PokemonShowcaseProps = {
   pokemon: Pick<PokemonDetails, 'id' | 'sprites' | 'types' | 'height' | 'weight'> & {
@@ -21,27 +22,46 @@ export function PokemonShowcase({ pokemon, name }: PokemonShowcaseProps) {
   // Get the Pokemon's type names
   const typeNames = pokemon.types.map(typeInfo => typeInfo.type.name);
   
+  // Get the primary type for styling
+  const primaryType = pokemon.types[0]?.type.name || "normal";
+  
   // Get weaknesses based on the Pokemon's types
   const weaknesses = getTypeWeaknesses(typeNames);
 
   return (
-    <Card className="w-full overflow-hidden">
+    <Card className={cn(
+      "w-full overflow-hidden border",
+      `border-${primaryType === 'normal' ? 'gray-300' : `type-${primaryType}/50`}`,
+      `bg-gradient-to-b from-${primaryType === 'normal' ? 'gray-50' : `type-${primaryType}/5`} to-transparent`
+    )}>
       <CardContent className="p-4 py-0 flex flex-col items-center">
         <div className="relative h-64 w-64 mb-4">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-black/5 rounded-full animate-pulse"></div>
-          <div className="absolute inset-0 bg-gray-900/5 rounded-full blur-xl"></div>
+          {/* Primary type color glow effect */}
+          <div 
+            className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 rounded-full bg-type-${primaryType} blur-2xl opacity-5 animate-pulse z-0`}
+          ></div>
+          
+          {/* Gradient circle background */}
+          <div className={`absolute inset-0 bg-gradient-radial from-${primaryType === 'normal' ? 'white/10' : `type-${primaryType}/15`} to-transparent rounded-full animate-pulse`}></div>
+          
+          {/* Outer glow */}
+          <div className={`absolute -inset-4 bg-gradient-to-br from-${primaryType === 'normal' ? 'gray-100/30' : `type-${primaryType}/10`} to-transparent rounded-full blur-xl`}></div>
+          
           <Image
             src={
               pokemon.sprites.other["official-artwork"].front_default || "/placeholder.svg?height=256&width=256"
             }
             alt={formattedName}
             fill
-            className="object-contain animate-float"
+            className="object-contain animate-float z-10 relative"
             priority
           />
         </div>
 
-        <h1 className="text-3xl gradient-text font-bold mb-2">{formattedName}</h1>
+        <h1 className={cn(
+          "text-3xl font-bold mb-2",
+          primaryType === "normal" ? "gradient-text" : `text-type-${primaryType}`
+        )}>{formattedName}</h1>
         <p className="text-lg text-gray-500 mb-2">#{pokemon.id.toString().padStart(3, "0")}</p>
         {pokemon.genus && <p className="text-sm text-gray-600 italic mb-4">{pokemon.genus}</p>}
 
@@ -82,16 +102,16 @@ export function PokemonShowcase({ pokemon, name }: PokemonShowcaseProps) {
         </div>
 
         <div className="grid grid-cols-2 gap-4 w-full">
-          <div className="text-center flex flex-col items-center rounded-lg p-2 bg-gradient-to-br from-red-50 to-red-100">
+          <div className={`text-center flex flex-col items-center rounded-lg p-2 bg-gradient-to-br from-${primaryType === 'normal' ? 'gray-50' : `type-${primaryType}/10`} to-${primaryType === 'normal' ? 'gray-100' : `type-${primaryType}/5`}`}>
             <div className="flex items-center gap-1 text-gray-600">
-              <Ruler className="h-3 w-3 text-red-500" />
+              <Ruler className={`h-3 w-3 text-type-${primaryType}`} />
               <p className="text-xs">Height</p>
             </div>
             <p className="font-semibold text-gray-800 text-sm">{pokemon.height / 10} m</p>
           </div>
-          <div className="text-center flex flex-col items-center rounded-lg p-2 bg-gradient-to-br from-red-50 to-red-100">
+          <div className={`text-center flex flex-col items-center rounded-lg p-2 bg-gradient-to-br from-${primaryType === 'normal' ? 'gray-50' : `type-${primaryType}/10`} to-${primaryType === 'normal' ? 'gray-100' : `type-${primaryType}/5`}`}>
             <div className="flex items-center gap-1 text-gray-600">
-              <Scale className="h-3 w-3 text-red-500" />
+              <Scale className={`h-3 w-3 text-type-${primaryType}`} />
               <p className="text-xs">Weight</p>
             </div>
             <p className="font-semibold text-gray-800 text-sm">{pokemon.weight / 10} kg</p>

@@ -88,15 +88,26 @@ export function PokemonCard({ name }: PokemonCardProps) {
           ) : (
             <>
               <div className="relative h-40 w-40 mb-4">
-                <div className={`absolute inset-0 rounded-full bg-gradient-radial from-${primaryType === 'normal' ? 'gray-100' : `type-${primaryType}/20`} to-transparent animate-pulse opacity-70`}></div>
-                <div className={`absolute -inset-4 bg-gradient-to-br from-${primaryType === 'normal' ? 'gray-100' : `type-${primaryType}/10`} to-transparent rounded-full blur-xl opacity-50 ${isHovered ? 'animate-blob' : ''}`}></div>
+                {/* Circular glow effect */}
+                <div 
+                  className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 rounded-full bg-type-${primaryType} blur-2xl opacity-20 animate-pulse z-0`}
+                ></div>
+                
+                {/* Enhanced circular background with pulse */}
+                <div className={`absolute inset-0 rounded-full bg-gradient-radial from-${primaryType === 'normal' ? 'gray-100' : `type-${primaryType}/5`} to-transparent animate-pulse opacity-50`}></div>
+                
+                {/* Animated blob effect on hover */}
+                <div 
+                  className={`absolute -inset-4 bg-gradient-to-br from-${primaryType === 'normal' ? 'gray-100' : `type-${primaryType}/10`} to-transparent rounded-full blur-xl opacity-50 ${isHovered ? 'animate-blob' : ''}`}
+                ></div>
+                
                 <Image
                   src={
                     pokemon.sprites.other["official-artwork"].front_default || "/placeholder.svg?height=160&width=160"
                   }
                   alt={formattedName}
                   fill
-                  className={`object-contain transition-all drop-shadow-lg  duration-500 ${isHovered ? "scale-110 animate-float" : ""}`}
+                  className={`object-contain transition-all drop-shadow-lg duration-500 ${isHovered ? "scale-110 animate-float" : ""} z-10 relative`}
                 />
               </div>
               

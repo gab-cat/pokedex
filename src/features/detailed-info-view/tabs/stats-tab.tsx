@@ -59,7 +59,7 @@ export function StatsTab({ stats }: StatsTabProps) {
   };
 
   return (
-    <Card className="animate-popIn" style={{ animationDelay: '0.1s' }}>
+    <Card style={{ animationDelay: '0.1s' }}>
       <CardContent className="p-4 py-0">
         <div className="flex items-center gap-2 mb-4">
           <BarChart3 className="h-5 w-5 text-red-500" />
