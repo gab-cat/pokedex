@@ -53,7 +53,7 @@ export function EvolutionTab({ evolutionChain, currentPokemonName, primaryType =
                             alt={formattedEvoName}
                             width={48}
                             height={48}
-                            className={`object-contain ${isCurrentPokemon ? "animate-bounce" : ""}`}
+                            className={`animate-fadeIn object-contain ${isCurrentPokemon ? "animate-bounce" : ""}`}
                             style={{
                               filter: isCurrentPokemon ? "none" : "grayscale(1)"
                             }}

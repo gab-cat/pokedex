@@ -37,7 +37,7 @@ export function HeroSection() {
             alt="Pokéball"
             fill
             priority
-            className="object-cover rounded-md"
+            className="animate-fadeIn object-cover rounded-md"
           />
         </div>
       </div>

@@ -107,7 +107,7 @@ export function PokemonCard({ name }: PokemonCardProps) {
                   }
                   alt={formattedName}
                   fill
-                  className={`object-contain transition-all drop-shadow-lg duration-500 ${isHovered ? "scale-110 animate-float" : ""} z-10 relative`}
+                  className={`animate-fadeIn object-contain transition-all drop-shadow-lg duration-500 ${isHovered ? "scale-110 animate-float" : ""} z-10 relative`}
                 />
               </div>
               

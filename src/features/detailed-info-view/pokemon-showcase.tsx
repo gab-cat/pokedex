@@ -53,7 +53,7 @@ export function PokemonShowcase({ pokemon, name }: PokemonShowcaseProps) {
             }
             alt={formattedName}
             fill
-            className="object-contain animate-float z-10 relative"
+            className="animate-fadeIn object-contain z-10 relative"
             priority
           />
         </div>
