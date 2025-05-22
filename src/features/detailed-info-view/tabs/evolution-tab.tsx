@@ -5,19 +5,27 @@ import Link from "next/link";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { EvolutionChain } from "@/types";
+import { cn } from "@/lib/utils";
 
 type EvolutionTabProps = {
   evolutionChain: EvolutionChain[];
   currentPokemonName: string;
+  primaryType?: string;
 };
 
-export function EvolutionTab({ evolutionChain, currentPokemonName }: EvolutionTabProps) {
+export function EvolutionTab({ evolutionChain, currentPokemonName, primaryType = "normal" }: EvolutionTabProps) {
   return (
-    <Card>
+    <Card className={cn(
+      "border",
+      `border-${primaryType === 'normal' ? 'gray-300' : `type-${primaryType}/50`}`
+    )}>
       <CardContent className="p-4 py-0">
         <div className="flex items-center gap-2 mb-4">
-          <Sparkles className="h-5 w-5 text-red-500" />
-          <h2 className="text-xl gradient-text font-bold">Evolution Chain</h2>
+          <Sparkles className={`h-5 w-5 text-type-${primaryType}`} />
+          <h2 className={cn(
+            "text-xl font-bold",
+            primaryType === "normal" ? "gradient-text" : `text-type-${primaryType}`
+          )}>Evolution Chain</h2>
         </div>
 
         {evolutionChain.length > 1 ? (
@@ -28,10 +36,16 @@ export function EvolutionTab({ evolutionChain, currentPokemonName }: EvolutionTa
 
               return (
                 <div key={evo.name} className="relative">
-                  {index > 0 && <div className="absolute left-6 -top-4 h-4 w-0.5 bg-gray-300"></div>}
-                  <div className={`flex items-center ${isCurrentPokemon ? "bg-red-50 rounded-lg p-2" : ""}`}>
+                  {index > 0 && <div className={cn(
+                    "absolute left-6 -top-4 h-4 w-0.5", 
+                    `bg-type-${primaryType}/30`
+                  )}></div>}
+                  <div className={cn(
+                    "flex items-center",
+                    isCurrentPokemon ? `bg-type-${primaryType}/10 rounded-lg p-2` : ""
+                  )}>
                     <div className="relative h-12 w-12 mr-4">
-                      <div className="absolute inset-0 bg-gray-100 rounded-full"></div>
+                      <div className={`absolute inset-0 rounded-full ${isCurrentPokemon ? `bg-type-${primaryType}/15` : 'bg-gray-100'}`}></div>
                       <Link href={`/pokemon/${evo.name}`}>
                         <div className="relative">
                           <Image
@@ -52,7 +66,10 @@ export function EvolutionTab({ evolutionChain, currentPokemonName }: EvolutionTa
                     </div>
                     <div className="flex-1">
                       <Link href={`/pokemon/${evo.name}`} className="hover:underline">
-                        <span className={`font-medium ${isCurrentPokemon ? "text-red-500" : ""}`}>
+                        <span className={cn(
+                          "font-medium", 
+                          isCurrentPokemon ? `text-type-${primaryType}` : ""
+                        )}>
                           {formattedEvoName}
                         </span>
                       </Link>
@@ -66,7 +83,10 @@ export function EvolutionTab({ evolutionChain, currentPokemonName }: EvolutionTa
                       )}
                     </div>
                     {isCurrentPokemon && (
-                      <div className="text-xs bg-red-100 text-red-600 px-2 py-0.5 rounded-full">Current</div>
+                      <div className={cn(
+                        "text-xs px-2 py-0.5 rounded-full",
+                        `bg-type-${primaryType}/20 text-type-${primaryType}`
+                      )}>Current</div>
                     )}
                   </div>
                 </div>

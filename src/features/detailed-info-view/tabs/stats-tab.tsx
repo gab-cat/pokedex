@@ -4,9 +4,11 @@ import { BarChart3, Heart, Shield, Sparkles, Sword, Zap } from "lucide-react";
 import { useEffect, useState } from "react";
 import { PokemonDetails } from "../../../types/pokemon";
 import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 type StatsTabProps = {
   stats: PokemonDetails["stats"];
+  primaryType?: string;
 };
 
 function getStatIcon(statName: string) {
@@ -27,7 +29,7 @@ function getStatIcon(statName: string) {
     return <BarChart3 className="h-4 w-4" />;
   }
 }
-export function StatsTab({ stats }: StatsTabProps) {
+export function StatsTab({ stats, primaryType = "normal" }: StatsTabProps) {
   const [animated, setAnimated] = useState(false);
   
   useEffect(() => {
@@ -59,11 +61,17 @@ export function StatsTab({ stats }: StatsTabProps) {
   };
 
   return (
-    <Card style={{ animationDelay: '0.1s' }}>
+    <Card className={cn(
+      "border",
+      `border-${primaryType === 'normal' ? 'gray-300' : `type-${primaryType}/50`}`
+    )}>
       <CardContent className="p-4 py-0">
         <div className="flex items-center gap-2 mb-4">
-          <BarChart3 className="h-5 w-5 text-red-500" />
-          <h2 className="text-xl gradient-text font-bold">Base Stats</h2>
+          <BarChart3 className={`h-5 w-5 text-type-${primaryType}`} />
+          <h2 className={cn(
+            "text-xl font-bold",
+            primaryType === "normal" ? "gradient-text" : `text-type-${primaryType}`
+          )}>Base Stats</h2>
         </div>
         <div className="space-y-4">
           {stats.map((stat, index) => {
@@ -106,8 +114,8 @@ export function StatsTab({ stats }: StatsTabProps) {
           {/* Total stats */}
           <div className="pt-2 mt-2 border-t animate-slideUp opacity-0" style={{ animationDelay: `${150 * stats.length}ms` }}>
             <div className="flex justify-between mb-1">
-              <span className="text-sm font-bold">Total</span>
-              <span className="text-sm font-bold">
+              <span className={`text-base font-bold text-type-${primaryType}`} >Total</span>
+              <span className={`text-base font-bold text-type-${primaryType}`}>
                 {stats.reduce((total: number, stat: { base_stat: number }) => total + stat.base_stat, 0)}
               </span>
             </div>

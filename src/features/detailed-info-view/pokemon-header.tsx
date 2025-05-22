@@ -128,7 +128,7 @@ export function PokemonHeader({ pokemonId, name = "" }: PokemonHeaderProps) {
 
       <div className="flex flex-wrap gap-2 justify-center sm:justify-end w-full sm:w-auto">
         {isPrevLoading ? (
-          <div className="h-8 sm:h-10 w-[100px] sm:w-[140px]">
+          <div className="h-6 sm:h-8 w-[100px] sm:w-[140px]">
             <Skeleton className="h-full w-full rounded-full bg-gray-300/20 animate-pulse" />
           </div>
         ) : prevPokemon && (
@@ -136,7 +136,7 @@ export function PokemonHeader({ pokemonId, name = "" }: PokemonHeaderProps) {
             <Button 
               variant="default"
               size="sm" 
-              className="gap-1 sm:gap-2 rounded-full animate-slideUp bg-gray-700/90 text-white border-0 hover:bg-gray-900/100 transition-all shadow-md hover:shadow-lg text-xs sm:text-sm"
+              className="gap-1 sm:gap-2 rounded-full animate-fadeIn bg-gray-700/90 text-white border-0 hover:bg-gray-900/100 transition-all shadow-md hover:shadow-lg text-xs sm:text-sm"
               title={`Previous: ${formatName(prevPokemon.name)}`}
             >
               <ArrowLeft className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -147,7 +147,7 @@ export function PokemonHeader({ pokemonId, name = "" }: PokemonHeaderProps) {
         )}
 
         {isNextLoading ? (
-          <div className="h-8 sm:h-10 w-[100px] sm:w-[140px]">
+          <div className="h-6 sm:h-8 w-[100px] sm:w-[140px]">
             <Skeleton className="h-full w-full rounded-full bg-gray-300/20 animate-pulse" />
           </div>
         ) : nextPokemon && (
@@ -155,7 +155,7 @@ export function PokemonHeader({ pokemonId, name = "" }: PokemonHeaderProps) {
             <Button 
               variant="default"
               size="sm" 
-              className="gap-1 sm:gap-2 rounded-full animate-slideUp bg-gray-700/90 text-white border-0 hover:bg-gray-900/100 transition-all shadow-md hover:shadow-lg text-xs sm:text-sm"
+              className="gap-1 sm:gap-2 rounded-full animate-fadeIn bg-gray-700/90 text-white border-0 hover:bg-gray-900/100 transition-all shadow-md hover:shadow-lg text-xs sm:text-sm"
               title={`Next: ${formatName(nextPokemon.name)}`}
             >
               <span className="hidden xs:inline">Next:</span> #{(pokemonId + 1).toString().padStart(3, '0')} - {formatName(nextPokemon.name).substring(0, 12)}{nextPokemon.name.length > 12 ? "..." : ""}

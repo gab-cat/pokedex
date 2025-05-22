@@ -4,6 +4,7 @@ import { BarChart3, Swords, Zap } from "lucide-react";
 import { StatsTab, AbilitiesTab, MovesTab, EvolutionTab } from "./tabs";
 import { EvolutionChain, PokemonDetails as PokemonDetailsType } from "@/types/pokemon";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/utils";
 
 type PokemonDetailsProps = {
   pokemon: Pick<PokemonDetailsType, 'id' | 'stats'> & {
@@ -32,9 +33,10 @@ type PokemonDetailsProps = {
     baseHappiness: number;
     genus?: string;
   };
+  primaryType?: string;
 };
 
-export function PokemonDetails({ pokemon }: PokemonDetailsProps) {
+export function PokemonDetails({ pokemon, primaryType = "normal" }: PokemonDetailsProps) {
   const enhancedAbilities = pokemon.abilities.map(ability => {
     const descriptions: Record<string, string> = {
       "overgrow": "Powers up Grass-type moves when the Pokémon's HP is low.",
@@ -68,30 +70,54 @@ export function PokemonDetails({ pokemon }: PokemonDetailsProps) {
   return (
     <div className="flex flex-col gap-6">
       <Tabs defaultValue="stats" className="w-full rounded-full">
-        <TabsList className="grid grid-cols-3 mb-4 rounded-full pb-2">
-          <TabsTrigger value="stats" className="flex items-center gap-1 data-[state=active]:text-red-500 data-[state=active]:bg-red-100 rounded-full">
+        <TabsList className={cn(
+          "grid grid-cols-3 mb-4 rounded-full pb-2",
+          `bg-type-${primaryType}/10`
+        )}>
+          <TabsTrigger 
+            value="stats" 
+            className="flex items-center gap-1 rounded-full data-[state=active]:text-foreground data-[state=active]:bg-background"
+            style={{
+              '--tab-active-text': `var(--type-${primaryType})`,
+              '--tab-active-bg': `var(--type-${primaryType}-20)`
+            } as React.CSSProperties}
+          >
             <BarChart3 className="h-4 w-4" />
             Stats
           </TabsTrigger>
-          <TabsTrigger value="abilities" className="flex items-center gap-1 data-[state=active]:text-red-500 data-[state=active]:bg-red-100 rounded-full">
+          <TabsTrigger 
+            value="abilities" 
+            className="flex items-center gap-1 rounded-full data-[state=active]:text-foreground data-[state=active]:bg-background"
+            style={{
+              '--tab-active-text': `var(--type-${primaryType})`,
+              '--tab-active-bg': `var(--type-${primaryType}-20)`
+            } as React.CSSProperties}
+          >
             <Zap className="h-4 w-4" />
             Abilities
           </TabsTrigger>
-          <TabsTrigger value="moves" className="flex items-center gap-1 data-[state=active]:text-red-500 data-[state=active]:bg-red-100 rounded-full">
+          <TabsTrigger 
+            value="moves" 
+            className="flex items-center gap-1 rounded-full data-[state=active]:text-foreground data-[state=active]:bg-background"
+            style={{
+              '--tab-active-text': `var(--type-${primaryType})`,
+              '--tab-active-bg': `var(--type-${primaryType}-20)`
+            } as React.CSSProperties}
+          >
             <Swords className="h-4 w-4" />
             Moves
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="stats" className="mt-0">
-          <StatsTab stats={pokemon.stats} />
+          <StatsTab stats={pokemon.stats} primaryType={primaryType} />
         </TabsContent>
         <TabsContent value="abilities" className="mt-0">
-          <AbilitiesTab abilities={enhancedAbilities} pokemon={pokemon as unknown as PokemonDetailsType} />
+          <AbilitiesTab abilities={enhancedAbilities} pokemon={pokemon as unknown as PokemonDetailsType} primaryType={primaryType} />
         </TabsContent>
 
         <TabsContent value="moves" className="mt-0">
-          <MovesTab moves={pokemon.moves} />
+          <MovesTab moves={pokemon.moves} primaryType={primaryType} />
         </TabsContent>
       </Tabs>
 
@@ -99,7 +125,8 @@ export function PokemonDetails({ pokemon }: PokemonDetailsProps) {
       {pokemon.evolutionChain && pokemon.evolutionChain.length > 0 && (
         <EvolutionTab 
           evolutionChain={pokemon.evolutionChain as unknown as EvolutionChain[]} 
-          currentPokemonName={pokemon.name || ""} 
+          currentPokemonName={pokemon.name || ""}
+          primaryType={primaryType}
         />
       )}
     </div>

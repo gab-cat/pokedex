@@ -3,13 +3,15 @@
 import { Zap, Sparkles } from "lucide-react";
 import { PokemonDetails } from "../../../types/pokemon";
 import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 type AbilitiesTabProps = {
   abilities: PokemonDetails["abilities"];
   pokemon: PokemonDetails;
+  primaryType?: string;
 };
 
-export function AbilitiesTab({ abilities, pokemon }: AbilitiesTabProps) {
+export function AbilitiesTab({ abilities, pokemon, primaryType = "normal" }: AbilitiesTabProps) {
   const formattedName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
   const getDefaultDescription = (name: string, isHidden: boolean) => {
     if (isHidden) {
@@ -19,11 +21,17 @@ export function AbilitiesTab({ abilities, pokemon }: AbilitiesTabProps) {
   };
 
   return (
-    <Card>
+    <Card className={cn(
+      "border",
+      `border-${primaryType === 'normal' ? 'gray-300' : `type-${primaryType}/50`}`
+    )}>
       <CardContent className="p-4 py-0">
         <div className="flex items-center gap-2 mb-4">
-          <Zap className="h-5 w-5 text-red-500" />
-          <h2 className="text-xl gradient-text font-bold">Abilities</h2>
+          <Zap className={`h-5 w-5 text-type-${primaryType}`} />
+          <h2 className={cn(
+            "text-xl font-bold",
+            primaryType === "normal" ? "gradient-text" : `text-type-${primaryType}`
+          )}>Abilities</h2>
         </div>
         <ul className="space-y-4">
           {abilities.map((ability, index) => {

@@ -35,6 +35,9 @@ type PokemonViewProps = {
 };
 
 export function PokemonView({ pokemon, name }: PokemonViewProps) {
+  // Get the primary type for styling
+  const primaryType = pokemon.types[0]?.type.name || "normal";
+  
   return (
     <main className="flex min-h-screen flex-col items-center p-4 md:p-8">
       <div className="w-full max-w-4xl">
@@ -43,9 +46,9 @@ export function PokemonView({ pokemon, name }: PokemonViewProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-slideUp">
           <div className="flex flex-col gap-8">
             <PokemonShowcase pokemon={pokemon} name={name} />
-            <AboutTab pokemon={pokemon} />
+            <AboutTab pokemon={pokemon} primaryType={primaryType} />
           </div>
-          <PokemonDetails pokemon={pokemon} />
+          <PokemonDetails pokemon={pokemon} primaryType={primaryType} />
         </div>
       </div>
     </main>

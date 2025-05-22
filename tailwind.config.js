@@ -178,6 +178,10 @@ module.exports = {
           '0%, 100%': { opacity: '1', transform: 'scale(1)' },
           '50%': { opacity: '0.5', transform: 'scale(0.7)' },
         },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
       },
       animation: {
         float: 'float 3s ease-in-out infinite',
@@ -188,6 +192,7 @@ module.exports = {
         carousel: 'carousel 40s linear infinite',
         'carousel-reverse': 'carouselReverse 50s linear infinite',
         twinkle: 'twinkle 2s ease-in-out infinite',
+        fadeIn: 'fadeIn 0.5s ease-out forwards',
       },
       utilities: {
         '.clip-path-tail': {

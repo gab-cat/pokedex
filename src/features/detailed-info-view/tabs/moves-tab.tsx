@@ -2,6 +2,7 @@
 
 import { Swords } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 type MovesTabProps = {
   moves: {
@@ -9,15 +10,22 @@ type MovesTabProps = {
       name: string;
     };
   }[];
+  primaryType?: string;
 };
 
-export function MovesTab({ moves }: MovesTabProps) {
+export function MovesTab({ moves, primaryType = "normal" }: MovesTabProps) {
   return (
-    <Card>
+    <Card className={cn(
+      "border",
+      `border-${primaryType === 'normal' ? 'gray-300' : `type-${primaryType}/50`}`
+    )}>
       <CardContent className="p-4 py-0">
         <div className="flex items-center gap-2 mb-4">
-          <Swords className="h-5 w-5 text-red-500" />
-          <h2 className="text-xl gradient-text font-bold">Moves</h2>
+          <Swords className={`h-5 w-5 text-type-${primaryType}`} />
+          <h2 className={cn(
+            "text-xl font-bold",
+            primaryType === "normal" ? "gradient-text" : `text-type-${primaryType}`
+          )}>Moves</h2>
         </div>
         <div className="flex flex-wrap gap-2">
           {moves?.slice(0, 20).map((move, index) => {
