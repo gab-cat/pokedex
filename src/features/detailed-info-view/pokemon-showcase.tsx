@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { Ruler, Scale, ShieldAlert } from "lucide-react";
+import { useState } from "react";
 import { getTypeWeaknesses } from "./utils";
 import { getTypeIcon } from "./get-type-icon";
 import { Card, CardContent } from "@/components/ui/card";
@@ -16,6 +17,7 @@ type PokemonShowcaseProps = {
 };
 
 export function PokemonShowcase({ pokemon, name }: PokemonShowcaseProps) {
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   // Format the Pokemon name to be capitalized
   const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
   
@@ -53,7 +55,13 @@ export function PokemonShowcase({ pokemon, name }: PokemonShowcaseProps) {
             }
             alt={formattedName}
             fill
-            className="animate-fadeIn object-contain z-10 relative"
+            className={cn(
+              "object-contain z-10 relative",
+              isImageLoaded ? "animate-fadeIn" : "opacity-0"
+            )}
+            onLoad={() => {
+              setIsImageLoaded(true);
+            }}
             priority
           />
         </div>

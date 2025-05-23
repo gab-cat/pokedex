@@ -18,6 +18,7 @@ type PokemonCardProps = {
 
 export function PokemonCard({ name }: PokemonCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
   
   const { data: pokemon, isLoading, error } = usePokemonDetails(name);
   const { isFavorite, addFavorite, removeFavorite } = useFavoritesStore();
@@ -107,7 +108,12 @@ export function PokemonCard({ name }: PokemonCardProps) {
                   }
                   alt={formattedName}
                   fill
-                  className={`animate-fadeIn object-contain transition-all drop-shadow-lg duration-500 ${isHovered ? "scale-110 animate-float" : ""} z-10 relative`}
+                  className={cn(
+                    "object-contain transition-all drop-shadow-lg duration-500",
+                    isHovered ? "scale-110 animate-float" : "",
+                    isImageLoaded ? "animate-fadeIn" : "opacity-0"
+                  )}
+                  onLoad={() => setIsImageLoaded(true)}
                 />
               </div>
               
