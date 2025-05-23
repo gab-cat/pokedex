@@ -10,14 +10,14 @@ type PokemonPageProps = {
   }>;
 };
 
-export async function generateStaticParams() {
-  const apiClient = useApiClient();
-  const pokemonData = await apiClient.get<{ results: { name: string }[] }>(`/pokemon?limit=151`);
+// export async function generateStaticParams() {
+//   const apiClient = useApiClient();
+//   const pokemonData = await apiClient.get<{ results: { name: string }[] }>(`/pokemon?limit=151`);
   
-  return pokemonData.results.map((pokemon: { name: string }) => ({
-    name: pokemon.name,
-  }));
-}
+//   return pokemonData.results.map((pokemon: { name: string }) => ({
+//     name: pokemon.name,
+//   }));
+// }
 
 export async function generateMetadata({ params }: PokemonPageProps): Promise<Metadata> {
   const pokemonName = (await params).name;
