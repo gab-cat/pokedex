@@ -13,7 +13,6 @@ export async function fetchApi<T>(
 ): Promise<T> {
   const response = await fetch(`${API_URL}${path}`, {
     ...options,
-    cache: 'force-cache',
     headers: {
       'Content-Type': 'application/json',
       // force caching for 1 hour
