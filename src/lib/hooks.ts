@@ -42,7 +42,7 @@ export function useSearchPokemon(searchTerm: string, filters?: { type: 'name' | 
   return useQuery({
     queryKey: ['searchPokemon', searchTerm, filters, sort],
     queryFn: async () => {
-      const data = await apiClient.get<PokemonListResponse>(`/pokemon?limit=1000&offset=0`);
+      const data = await apiClient.get<PokemonListResponse>(`/pokemon?limit=1302&offset=0`);
       
       // Filter results based on the search term
       let results = data.results.filter((pokemon: Pokemon) => {
